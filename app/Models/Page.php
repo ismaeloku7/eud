@@ -2,26 +2,42 @@
 
 namespace App\Models;
 
+use App\Pages\SectionData;
+use App\Pages\Template;
+use App\Pages\Templates;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
 /**
- * A public page made of ordered blocks. `blocks` is the Filament Builder
- * payload: [{type: 'hero', data: {...}}, ...]. Block data is stored per
- * locale through the translatable cast so each field has its EN/ES value.
+ * A public page. Its template (App\Pages\Templates) declares the sections and
+ * fields the editor fills in; the values are stored in `sections` as
+ * {section: {field: value}} where translatable values are {locale: text}.
  */
 class Page extends Model
 {
     use HasTranslations;
 
-    protected $fillable = ['name', 'slug', 'title', 'blocks', 'seo', 'published'];
+    protected $fillable = ['name', 'slug', 'template', 'title', 'sections', 'seo', 'published'];
 
-    public array $translatable = ['title', 'blocks', 'seo'];
+    public array $translatable = ['title', 'seo'];
 
     protected function casts(): array
     {
-        return ['published' => 'boolean'];
+        return [
+            'sections' => 'array',
+            'published' => 'boolean',
+        ];
+    }
+
+    public function template(): Template
+    {
+        return Templates::find($this->template);
+    }
+
+    public function section(string $key): SectionData
+    {
+        return new SectionData($this->sections[$key] ?? []);
     }
 
     public function scopePublished(Builder $query): Builder
@@ -32,5 +48,19 @@ class Page extends Model
     public function scopeSlug(Builder $query, string $slug): Builder
     {
         return $query->where('slug', $slug);
+    }
+
+    /** Cached lookup used by the public site; cleared on save. */
+    public static function findBySlug(string $slug): ?self
+    {
+        return cache()->rememberForever("page:{$slug}", fn () => static::query()->slug($slug)->first()) ?: null;
+    }
+
+    protected static function booted(): void
+    {
+        $forget = fn (self $page) => cache()->forget("page:{$page->slug}") && cache()->forget("page:{$page->getOriginal('slug')}");
+
+        static::saved($forget);
+        static::deleted($forget);
     }
 }

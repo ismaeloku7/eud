@@ -53,16 +53,19 @@ class SchemaTest extends TestCase
         $this->assertNull($honor->level);
     }
 
-    public function test_pages_store_blocks_per_locale(): void
+    public function test_pages_expose_sections_with_locale_fallback(): void
     {
         $page = Page::create([
             'name' => 'Home',
             'slug' => 'home',
-            'blocks' => ['en' => [['type' => 'hero', 'data' => ['title' => 'Welcome']]]],
+            'template' => 'home',
+            'sections' => ['hero' => ['kicker' => ['en' => 'Welcome'], 'image' => 'pages/cover.jpg']],
         ]);
 
-        $this->assertSame('Welcome', $page->fresh()->getTranslation('blocks', 'en')[0]['data']['title']);
-        $this->assertSame([], $page->fresh()->getTranslation('blocks', 'es', false) ?: []);
+        app()->setLocale('es');
+        $this->assertSame('Welcome', $page->fresh()->section('hero')->text('kicker'));
+        $this->assertSame('home', $page->template()::key());
+        $this->assertFalse($page->section('mission')->has('kicker'));
     }
 
     public function test_country_can_belong_to_a_parent_country(): void
