@@ -1,0 +1,15 @@
+{
+    "Content": "Contenido",
+    "Resources": "Recursos",
+    "Honors": "Honores",
+    "Events": "Eventos",
+    "Directory": "Directorio",
+    "Settings": "Configuración",
+    "User": "Usuario",
+    "Users": "Usuarios",
+    "Name": "Nombre",
+    "Email": "Correo electrónico",
+    "Password": "Contraseña",
+    "Created": "Creado",
+    "Leave empty to keep the current password.": "Déjalo vacío para mantener la contraseña actual."
+}
