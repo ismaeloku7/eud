@@ -51,7 +51,7 @@ php artisan filament:assets # regenerar assets del panel tras actualizar Filamen
 ## Fases del proyecto
 
 1. **Base** (hecha): proyecto, esquema, modelos, panel con usuarios.
-2. Panel para el bloque relacional: recursos, honores, directores, países, oficinas, catálogos.
+2. **Panel relacional** (hecho): recursos, honores, directores, países, oficinas y catálogos, con archivos y PDFs dentro de cada ficha.
 3. Páginas por bloques y conversión de los módulos antiguos.
 4. Eventos: ficha única con programa, talleres, ponentes, localizaciones, galería y descargas.
 5. Frontend público (vistas Blade portadas y unificadas por ministerio).

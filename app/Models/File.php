@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Number;
 
 class File extends Model
@@ -14,6 +15,16 @@ class File extends Model
     protected function casts(): array
     {
         return ['size' => 'integer'];
+    }
+
+    /** Keep `size` in sync with the uploaded file so lists can show it without touching the disk. */
+    protected static function booted(): void
+    {
+        static::saving(function (self $model): void {
+            if ($model->isDirty('file') && $model->file && Storage::disk('public')->exists($model->file)) {
+                $model->size = Storage::disk('public')->size($model->file);
+            }
+        });
     }
 
     public function model(): MorphTo
