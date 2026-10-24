@@ -59,7 +59,29 @@ php artisan filament:assets # regenerar assets del panel tras actualizar Filamen
 
 ## Despliegue e importación del sitio anterior
 
-El script de despliegue de Forge ejecuta `php artisan site:setup` después de las migraciones. Es seguro repetirlo:
+Forge despliega automáticamente cada cambio que llega a `main` (Push to deploy, despliegue sin cortes). Script de despliegue:
+
+```bash
+$CREATE_RELEASE()
+
+cd $FORGE_RELEASE_DIRECTORY
+
+$FORGE_COMPOSER install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+npm ci || npm install
+npm run build
+$FORGE_PHP artisan optimize
+$FORGE_PHP artisan storage:link
+$FORGE_PHP artisan migrate --force
+$FORGE_PHP artisan site:setup
+
+$ACTIVATE_RELEASE()
+
+$RESTART_QUEUES()
+```
+
+
+`php artisan site:setup` se ejecuta después de las migraciones y es seguro repetirlo:
 
 - En el primer despliegue importa una sola vez el contenido del sitio anterior desde `database/legacy/legacy.sqlite.gz` (copia sin sesiones ni registros de la base de datos antigua) y lo anota en la tabla `legacy_imports`.
 - Sin ese archivo, en una base de datos vacía crea catálogos y ministerios.
