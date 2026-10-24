@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\File;
 class SiteSetupCommand extends Command
 {
     /** Gzipped SQLite copy of the previous site's content, committed until the import is done. */
-    public const BUNDLED_DUMP = 'database/legacy/legacy.sqlite.gz';
+    public const BUNDLED_DUMP = 'database/legacy/legacy-content.db.gz';
 
     protected $signature = 'site:setup';
 
