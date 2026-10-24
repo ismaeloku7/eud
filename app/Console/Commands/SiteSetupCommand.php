@@ -71,14 +71,14 @@ class SiteSetupCommand extends Command
         try {
             $files = $importer->run(
                 [],
-                env('LEGACY_FILES_PATH') ?: null,
+                config('site.legacy.files_path') ?: null,
                 true,
                 fn (string $message) => $this->line($message),
                 function (string $message) use (&$warnings): void {
                     $warnings++;
                     $this->warn($message);
                 },
-                env('LEGACY_FILES_URL') ?: null,
+                config('site.legacy.files_url') ?: null,
             );
         } finally {
             DB::purge('legacy');

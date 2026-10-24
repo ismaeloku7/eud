@@ -41,8 +41,7 @@ class SiteSetupTest extends TestCase
     public function test_first_deploy_imports_the_bundled_dump_once_and_keeps_the_admin(): void
     {
         $this->bundleLegacyDatabase();
-        putenv('ADMIN_EMAIL=owner@eud.test');
-        putenv('ADMIN_PASSWORD=first-password');
+        config()->set('site.admin', ['name' => 'Owner', 'email' => 'owner@eud.test', 'password' => 'first-password']);
 
         $this->artisan('site:setup')->assertSuccessful();
 
@@ -52,16 +51,13 @@ class SiteSetupTest extends TestCase
         $this->assertTrue(User::where('email', 'editor@eud.test')->exists());
 
         Ministry::where('slug', 'pathfinders')->first()->update(['counter' => '9999']);
-        putenv('ADMIN_PASSWORD=changed-in-env');
+        config()->set('site.admin.password', 'changed-in-env');
 
         $this->artisan('site:setup')->assertSuccessful();
 
         $this->assertSame(1, DB::table('legacy_imports')->count(), 'second deploy does not import again');
         $this->assertSame('9999', Ministry::where('slug', 'pathfinders')->first()->counter, 'edits survive later deploys');
         $this->assertTrue(Hash::check('first-password', User::where('email', 'owner@eud.test')->value('password')));
-
-        putenv('ADMIN_EMAIL');
-        putenv('ADMIN_PASSWORD');
     }
 
     public function test_without_a_bundled_dump_an_empty_site_gets_catalogues_and_pages(): void

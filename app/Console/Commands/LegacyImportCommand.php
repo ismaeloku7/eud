@@ -36,7 +36,7 @@ class LegacyImportCommand extends Command
         }
 
         $only = array_values(array_filter(array_map('trim', explode(',', (string) $this->option('only')))));
-        $legacyRoot = $this->option('files') ?: (env('LEGACY_FILES_PATH') ?: null);
+        $legacyRoot = $this->option('files') ?: (config('site.legacy.files_path') ?: null);
 
         if ($legacyRoot && ! is_dir($legacyRoot)) {
             $this->error("Legacy files folder not found: {$legacyRoot}");
@@ -44,7 +44,7 @@ class LegacyImportCommand extends Command
             return self::FAILURE;
         }
 
-        $legacyUrl = $this->option('url') ?: (env('LEGACY_FILES_URL') ?: null);
+        $legacyUrl = $this->option('url') ?: (config('site.legacy.files_url') ?: null);
 
         if (! $legacyRoot && ! $legacyUrl) {
             $this->warn('No legacy files folder or URL given: paths are rewritten but no file is copied.');
