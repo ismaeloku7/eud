@@ -1,0 +1,447 @@
+[
+    {
+        "name": "Ministry 1 General Section Portada",
+        "slug": "ministry-1-general-section-portada",
+        "template": "text-image-three-color",
+        "data": {
+            "color_1": "#805300",
+            "image_1": "/images/cachorros-logo-white.png",
+            "image_2": "/images/footprint-bg.png",
+            "image_3": "/images/picture.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Ages 3-5"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Main 1",
+        "slug": "ministry-1-general-section-main-1",
+        "template": "trix-text",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "Introduction"
+            },
+            "content_1": {
+                "en": "The Cachorros Club Ministry was developed in Spain and voted as the EUD territory program for ages 3 to 5 by the Inter-European Division Youth Advisory in 2020. Cachorro is the Spanish word for puppy and cub; they are, so to speak, the “infants” of certain mammals, just like our cachorros are the youngest of our Club Ministries (ages 3 to 15).<br><br>Its aim is to provide a holistic approach to a child’s education, catering for their physical, mental, intellectual and spiritual needs.<br><br>Ellen G. White wrote about the importance of exerting a positive influence during a child’s earliest years:<br><br>“The work of education and training should commence with the babyhood of the child; for then the mind is the most impressible, and the lessons given are remembered.”<br>Child Guidance, p. 26 (Ellen G. White)<br><br>“Oh, that they might realize that the bias which is given to a child in its earliest years gives a tendency to character and shapes the destiny either for eternal life or eternal death!”<br>Signs of the Times, April 16, 1896."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Main 2",
+        "slug": "ministry-1-general-section-main-2",
+        "template": "trix-text",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "Leadership"
+            },
+            "content_1": {
+                "en": "The volunteer leadership, skilled in a myriad of unusual abilities and interests are, first and foremost, strong believers in Jesus Christ and are sure of the road they are taking towards eternal life. They consider the Pathfinder club an experimental laboratory where growth and learning are synonymous with fun. Failure is not expected, but rather all activity becomes a tool for learning. <br><br> Fersped est, untiusd andant laborumquam alitatem quasper uptatint molut que ommoles eatur, consenda volorumqui omnimilicium haruptios moluptae. Faccus ullacestrunt autaecto bernatur? Amusa pre nobitas ute por arum, nemolecus etum, omnihil itatiossunt. Videm labore vollabo rehenimus ea adit lautempor siminullaut discidi cipsus.Mus et pel iminihit aligenti omnim rest, inctecaerum doluptate is estiassequo tem earum dolorib ereris pla voles eate verum rati aped mod erchil id excesti nihiti in esti am quunt, il mint, suntet officim illignatint apedit.Fersped est, untiusd andant laborumquam alitatem quasper uptatint molut que ommoles eatur, consenda volorumqui omnimilicium haruptios moluptae. Faccus ullacestrunt autaecto bernatur? Amusa pre nobitas ute por arum, nemolecus etum, omnihil itatiossunt. Videm labore vollabo rehenimus ea adit lautempor siminullaut discidi cipsus.Mus et pel iminihit aligenti omnim rest, inctecaerum doluptate is estiassequo tem earum dolorib ereris pla voles eate verum rati aped mod erchil id excesti nihiti in esti am quunt, il mint, suntet officim illignatint apedit."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Main 3",
+        "slug": "ministry-1-general-section-main-3",
+        "template": "text-two-file-image",
+        "data": {
+            "image_1": "/images/priscilla-du-preez-nF8xhLMmg0c-unsplash.png",
+            "file_1": "/video/CABECERA-WEB-Viralgen-WHAT WE DO.mp4"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Pathfinder Day 2018"
+            },
+            "title_2": {
+                "en": "A History of Pathfinders"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Main 4",
+        "slug": "ministry-1-general-section-main-4",
+        "template": "text-two-file-image",
+        "data": {
+            "image_1": "/images/priscilla-du-preez-nF8xhLMmg0c-unsplash.png",
+            "file_1": "/video/CABECERA-WEB-Viralgen-WHAT WE DO.mp4"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Pathfinder History"
+            },
+            "title_2": {
+                "en": "A History of Pathfinders"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Headline 1",
+        "slug": "ministry-1-general-section-headline-1",
+        "template": "trix-text-two-image",
+        "data": {
+            "image_1": "/images/atm.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "AIM"
+            },
+            "title_2": {
+                "en": ""
+            },
+            "content_1": {
+                "en": "The Advent Message to all the world in my generation"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Headline 2",
+        "slug": "ministry-1-general-section-headline-2",
+        "template": "trix-text-two-image",
+        "data": {
+            "image_1": "/images/motto.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "SONG"
+            },
+            "title_2": {
+                "en": "https://www.dropbox.com/s/cnn3go6j7ka40vh/I%20am%20a%20Cachorro%20melody%20%2B%20lyrics.pdf?dl=0"
+            },
+            "content_1": {
+                "en": "I am a Cachorro"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Headline 3",
+        "slug": "ministry-1-general-section-headline-3",
+        "template": "trix-text-two-image",
+        "data": {
+            "image_1": "/images/pledge.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "PLEDGE"
+            },
+            "title_2": {
+                "en": ""
+            },
+            "content_1": {
+                "en": "I love Jesus and <br> I want to be like Him."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Headline 4",
+        "slug": "ministry-1-general-section-headline-4",
+        "template": "trix-text-two-image",
+        "data": {
+            "image_1": "/images/law.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "LAW"
+            },
+            "title_2": {
+                "en": ""
+            },
+            "content_1": {
+                "en": "<ol><li>I learn from Jesus</li><li>I always say the truth</li><li>I am respectful</li><li>I am obedient</li><li>I help others</li></ol>"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Philosophy 1",
+        "slug": "ministry-1-general-section-philosophy-1",
+        "template": "trix-text",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "TEACHING METHODOLOGY"
+            },
+            "content_1": {
+                "en": "The Cachorros program has the following goals:<ul><li>to ensure children learn the requirements in an age-appropriate manner, by playing, interacting and using their five senses;</li><li>to provide opportunities for interaction with other children, fostering team work and a sense of community;</li><li>to make sure that children learn and practice the value of caring and sharing and of being organized;</li><li>to help children improve their self-esteem as they see they are capable of doing an activity on their own;</li><li>to teach children to ask for help when they need it.</li></ul>"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Philosophy 2",
+        "slug": "ministry-1-general-section-philosophy-2",
+        "template": "trix-text",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "Teaching Methodology"
+            },
+            "content_1": {
+                "en": "That children learn the requirements in accordance with their age: playing, interacting and using their five senses;<br><ul><li>that children interact with one another, fostering team work;</li><li>that children learn and put into practice the value of “sharing”;</li><li>that children learn to wait for their turn and to be organized;</li><li>that children improve their self-esteem as they see they are capable of doing an activity on their own;</li><li>that children learn to ask for help when they really need it.</li></ul>"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Counter 1",
+        "slug": "ministry-1-general-section-counter-1",
+        "template": "trix-number-image",
+        "data": {
+            "image_1": "/images/club.png",
+            "cant_1": "354"
+        },
+        "extras": {
+            "content_1": {
+                "en": "CACHORROS CLUBS"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Counter 2",
+        "slug": "ministry-1-general-section-counter-2",
+        "template": "trix-number-image",
+        "data": {
+            "image_1": "/images/team-user.png",
+            "cant_1": "2629"
+        },
+        "extras": {
+            "content_1": {
+                "en": "CACHORROS <br>AGES 3-5"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Logo",
+        "slug": "ministry-1-general-section-logo",
+        "template": "trix-text-six-file-image",
+        "data": {
+            "image_1": "/images/footprint-logo.png",
+            "file_1": "/images/footprint-logo.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "https://www.dropbox.com/sh/3kmbxcnwjd37xsp/AAB5h1M2SH7Q9yhBKnI23vDXa?dl=0"
+            },
+            "title_2": {
+                "en": "Meaning of the Logo"
+            },
+            "title_3": {
+                "en": "Download"
+            },
+            "title_4": {
+                "en": "w-1/4 px-2 text-center mobile:mb-10 mobile:w-1/2 mb-18"
+            },
+            "title_5": {
+                "en": "mb-0 uppercase text-primary"
+            },
+            "title_6": {
+                "en": "inline-block mb-5"
+            },
+            "content_1": {
+                "en": "The logo is the footprint of a cachorro. Cachorro is the Spanish word for puppy and cub; they are, so to speak, the “infants” of certain mammals. This footprint reminds us that our cachorros (ages 3 to 5) are in a period of tremendous growth, learning and discovery, and that we must always follow in the footsteps of Jesus."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Logo 1",
+        "slug": "ministry-1-general-section-logo-1",
+        "template": "trix-text-image",
+        "data": {
+            "image_1": "/images/footprint.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "FOOTPRINT"
+            },
+            "content_1": {
+                "en": "We follow in the footsteps of Jesus."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Logo 2",
+        "slug": "ministry-1-general-section-logo-2",
+        "template": "trix-text-image",
+        "data": {
+            "image_1": "/images/shield.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "SHIELD"
+            },
+            "content_1": {
+                "en": "represents the protection God gives us."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Logo 3",
+        "slug": "ministry-1-general-section-logo-3",
+        "template": "trix-text-image",
+        "data": {
+            "image_1": "/images/yellow.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "YELLOW"
+            },
+            "content_1": {
+                "en": "represents excellence."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Logo 4",
+        "slug": "ministry-1-general-section-logo-4",
+        "template": "trix-text-image",
+        "data": {
+            "image_1": "/images/brown.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "BROWN"
+            },
+            "content_1": {
+                "en": "represents our connection with nature."
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 1",
+        "slug": "ministry-1-general-section-all-about-1",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/honors.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Honors"
+            },
+            "title_2": {
+                "en": ""
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 2",
+        "slug": "ministry-1-general-section-all-about-2",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/manual.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Manual"
+            },
+            "title_2": {
+                "en": ""
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 3",
+        "slug": "ministry-1-general-section-all-about-3",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/songs.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Songs"
+            },
+            "title_2": {
+                "en": "https://www.dropbox.com/s/cnn3go6j7ka40vh/I%20am%20a%20Cachorro%20melody%20%2B%20lyrics.pdf?dl=0"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 4",
+        "slug": "ministry-1-general-section-all-about-4",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/camporee.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Camporee"
+            },
+            "title_2": {
+                "en": ""
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 5",
+        "slug": "ministry-1-general-section-all-about-5",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/graphics.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Graphics"
+            },
+            "title_2": {
+                "en": ""
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 6",
+        "slug": "ministry-1-general-section-all-about-6",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/pathfinder.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Pathfinder Day"
+            },
+            "title_2": {
+                "en": ""
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 7",
+        "slug": "ministry-1-general-section-all-about-7",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/logos.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Logos"
+            },
+            "title_2": {
+                "en": "https://www.dropbox.com/sh/3w8pnhtqmh3tobh/AADOIajJMAlmSmFBUHskrebYa?dl=0"
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section All About 8",
+        "slug": "ministry-1-general-section-all-about-8",
+        "template": "text-two-image",
+        "data": {
+            "image_1": "/images/master-guide.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "Master Guide"
+            },
+            "title_2": {
+                "en": ""
+            }
+        }
+    },
+    {
+        "name": "Ministry 1 General Section Maps",
+        "slug": "ministry-1-general-section-maps",
+        "template": "text",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "LEARN MORE ABOUT CACHORROS IN THE EUD"
+            }
+        }
+    }
+]

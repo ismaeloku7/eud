@@ -1,0 +1,1 @@
+<livewire:amicus.resources />

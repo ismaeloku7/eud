@@ -55,15 +55,47 @@
 | `Country::country()` | `Country::parent()` |
 | `Page` + `Module` + `Attribute` | `Page` con `blocks` |
 
-## Importación de datos (fase 6)
+## Importación de datos (`php artisan legacy:import`)
 
-Un comando artisan leerá la base antigua por una segunda conexión (`DB_LEGACY_*`) y escribirá en la nueva:
+Lee la base antigua por la conexión `legacy` (`DB_LEGACY_*` en `.env`) y escribe en la nueva conservando los ids. Pasos (`--only=a,b` para ejecutar solo algunos; `--steps` los lista):
 
-1. Catálogos y ministerios (mismos IDs).
-2. Países, directores, oficinas.
-3. Recursos, pivotes, archivos.
-4. Honores y PDFs.
-5. Eventos y todo su árbol.
-6. Módulos → bloques de página (requiere datos reales para fijar la correspondencia plantilla → bloque).
-7. Atributo `amicus` → página de bloques.
-8. Ficheros de `storage/app/public` y `public/images` referenciados por las filas anteriores.
+| Paso | Qué copia |
+|---|---|
+| `users` | Editores con su contraseña actual. |
+| `catalogues` | Idiomas, tipos de archivo y de director, categorías, clases, niveles, master awards, líneas. |
+| `ministries` | Ministerios (posición = id antiguo). |
+| `countries` | Países; el enlace a la unión se resuelve en una segunda pasada. |
+| `directory` | Directores y oficinas (se omite la fila si falta el país o el ministerio). |
+| `resources` | Recursos, pivotes, archivos. `destacado` pasa a `featured`. |
+| `honors` | Honores y PDFs; nivel, clase y master award inexistentes pasan a null. |
+| `events` | Eventos y todo su árbol, más las filas de `media`. |
+| `pages` | Módulos → secciones según `app/Legacy/ModuleMap.php`; atributo `amicus` → página AMiCUS. |
+
+Rutas de archivos: lo que estaba en `public/images` o `public/video` pasa a `storage/app/public/legacy/...`; lo que estaba en `storage/app/public` conserva su ruta. Con `--files=/ruta/al/sitio/antiguo` (o `LEGACY_FILES_PATH`) los ficheros se copian; sin ella solo se reescriben las rutas y el resumen final lista lo que falta.
+
+## Imágenes de diseño que no van en git
+
+Las vistas referencian 153 imágenes de `public/images`; 133 (9 MB) están en el repositorio. Estas 20 superan 600 KB y hay que copiarlas del sitio antiguo al desplegar (`rsync -a antiguo/public/images/ nuevo/public/images/` añade las que falten sin tocar las demás):
+
+```
+video/CABECERA-WEB-Viralgen-WHAT WE DO.mp4
+video/CABECERA-WEB-Viralgen-WHAT WE DO.webm
+images/IG.jpg
+images/ministries/yung/SYL18-Final-HIGHres.pdf
+images/ministries/maps/symbols/1.png
+images/ministries/maps/symbols/2.png
+images/ministries/insignias/squirrels/1.png
+images/ministries/insignias/patchfinder/excursionista.png
+images/ministries/insignias/patchfinder/rastreador.png
+images/resources/adventures/a2.jpg
+images/resources/manuals/Busy-Bee-banner.png
+images/resources/manuals/Sunbeam-banner.png
+images/resources/manuals/Helping-Hands-banner.png
+images/resources/manuals/Little-Lamb-banner.png
+images/resources/manuals/Builder-banner.png
+images/resources/manuals/Early-Bird-banner.png
+images/event_2_v2.webp
+images/jed-villejo-bEcC0nyIp2g-unsplash.png
+images/shared_room.png
+images/priscilla-du-preez-nF8xhLMmg0c-unsplash.png
+```

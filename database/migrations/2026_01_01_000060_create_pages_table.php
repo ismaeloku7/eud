@@ -5,9 +5,10 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * Replaces the legacy pages + modules + attributes trio. A page is an ordered
- * list of typed blocks stored as JSON; every block has a human readable label
- * in the admin instead of title_1 / content_2 style field names.
+ * Replaces the legacy pages + modules + attributes trio. Every page follows a
+ * template (App\Pages\Templates) that declares its sections and fields with
+ * human readable labels; the editor fills them in on one screen and the
+ * values live in the `sections` JSON column.
  */
 return new class extends Migration
 {
@@ -17,8 +18,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('template');
             $table->json('title')->nullable();
-            $table->json('blocks')->nullable();
+            $table->json('sections')->nullable();
             $table->json('seo')->nullable();
             $table->boolean('published')->default(true);
             $table->timestamps();

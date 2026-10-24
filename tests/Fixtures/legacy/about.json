@@ -1,0 +1,67 @@
+[
+  {
+    "name": "ABOUT",
+    "slug": "about",
+    "template": "trix-two-text",
+    "data": {},
+    "extras": {
+      "title_1": {
+        "en": "ABOUT US"
+      },
+      "content_1": {
+        "en": "<strong>Children and Youth</strong> Our Passion"
+      },
+      "content_2": {
+        "en": "The purpose of EUD Youth Ministries is to lead young people into a saving relationship with Jesus by winning, training, retaining, and reclaiming the youth."
+      }
+    }
+  },
+  {
+    "name": "About Director 1",
+    "slug": "about-director-1",
+    "template": "text-two-image",
+    "data": {
+      "image_1": "/images/csm_jonatan_tejel.png"
+    },
+    "extras": {
+      "title_1": {
+        "en": "JONATAN TEJEL"
+      },
+      "title_2": {
+        "en": "Youth Ministries Director"
+      }
+    }
+  },
+  {
+    "name": "About Director 2",
+    "slug": "about-director-2",
+    "template": "text-two-image",
+    "data": {
+      "image_1": "/images/csm_alex-mora.png"
+    },
+    "extras": {
+      "title_1": {
+        "en": "ALEXANDRA MORA"
+      },
+      "title_2": {
+        "en": "AMiCUS and Young Adult Specialist"
+      }
+    }
+  },
+  {
+    "name": "About Director 3",
+    "slug": "about-director-3",
+    "template": "text-two-image",
+    "data": {
+      "image_1": "/images/csm_isaac-chia.png"
+    },
+    "extras": {
+      "title_1": {
+        "en": "ISAAC CHÍA"
+      },
+      "title_2": {
+        "en": "Pathfinder Specialist and Graphic Designer"
+      }
+    }
+  }
+]

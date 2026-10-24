@@ -51,8 +51,18 @@ php artisan filament:assets # regenerar assets del panel tras actualizar Filamen
 ## Fases del proyecto
 
 1. **Base** (hecha): proyecto, esquema, modelos, panel con usuarios.
-2. Panel para el bloque relacional: recursos, honores, directores, países, oficinas, catálogos.
-3. Páginas por bloques y conversión de los módulos antiguos.
-4. Eventos: ficha única con programa, talleres, ponentes, localizaciones, galería y descargas.
-5. Frontend público (vistas Blade portadas y unificadas por ministerio).
-6. Importación de datos y ficheros desde la base de datos antigua, pruebas y corte.
+2. **Panel relacional** (hecho): recursos, honores, directores, países, oficinas y catálogos, con archivos y PDFs dentro de cada ficha.
+3. **Páginas** (hecho): plantillas con secciones y campos etiquetados, editor en una sola pantalla con EN/ES lado a lado.
+4. **Eventos** (hecho): ficha única con programa, talleres, ponentes, salas, galería y descargas.
+5. **Sitio público** (hecho): vistas portadas del sitio anterior sobre Tailwind 4 y Livewire 4, lógica unificada por ministerio.
+6. **Importación** (hecho): comando `legacy:import` que copia la base de datos y los ficheros del sitio anterior.
+
+## Importar el sitio anterior
+
+1. Rellena `DB_LEGACY_*` en `.env` con la base de datos antigua (solo lectura) y, si está en el mismo servidor, `LEGACY_FILES_PATH` con la carpeta raíz del proyecto antiguo (la que contiene `public/` y `storage/`).
+2. `php artisan migrate --force` y `php artisan db:seed --force` (catálogos, ministerios y páginas vacías).
+3. `php artisan legacy:import --fresh` copia tablas, reescribe rutas de archivos y convierte los módulos antiguos en secciones de página. Se puede repetir: conserva los ids y actualiza en lugar de duplicar.
+4. Copia a `public/images` las imágenes de diseño grandes que no van en git (lista en `docs/MIGRACION.md`).
+5. Entra en `/admin`, revisa Páginas → Ajustes del sitio, Inicio y cada ministerio, y publica.
+
+Para probar sin la base de datos real, `tests/Fixtures/legacy/` contiene el esquema antiguo y el contenido inicial de las páginas.
