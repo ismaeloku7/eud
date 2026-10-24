@@ -110,6 +110,11 @@ class PagesStep implements ImportStep
             }
 
             $section = Templates::find($template)->section($rule['section']);
+
+            if ($section === null || ! $this->pageHasSection($pageSlug, $rule['section'])) {
+                return;
+            }
+
             $item = [];
 
             foreach ($rule['fields'] as $target => $source) {
@@ -132,6 +137,14 @@ class PagesStep implements ImportStep
         }
 
         $context->warn("Module [{$key}] of template [{$template}] has no mapping, skipped.");
+    }
+
+    /** Pages keep only the sections their own template declares (AMiCUS ignores the generic ministry modules). */
+    private function pageHasSection(string $pageSlug, string $section): bool
+    {
+        $page = Page::query()->where('slug', $pageSlug)->first();
+
+        return $page === null || Templates::find($page->template)->section($section) !== null;
     }
 
     private function importAmicus(LegacyContext $context): void
