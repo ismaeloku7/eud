@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Directors\Tables;
 
+use App\Filament\Support\Tables\Thumbnail;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -16,7 +16,7 @@ class DirectorsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('photo')->label('')->disk('public')->circular(),
+                Thumbnail::make('photo')->circular(),
                 TextColumn::make('name')->label(__('Name'))->searchable()->sortable(),
                 TextColumn::make('charge')->label(__('Position / role'))->searchable()->toggleable(),
                 TextColumn::make('ministry.name')->label(__('Ministry'))->badge()->sortable(),

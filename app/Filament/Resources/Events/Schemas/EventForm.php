@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Events\Schemas;
 
-use App\Filament\Support\Forms\Relations;
 use App\Filament\Support\Forms\TemplateSchema;
 use App\Filament\Support\Forms\Uploads;
 use App\Pages\Field;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -82,7 +82,10 @@ class EventForm
                             Section::make()->columns(2)->schema([
                                 TextInput::make('speaker_tab')->label(__('Tab label'))->maxLength(100)->placeholder('Speakers'),
                                 TextInput::make('speaker_title')->label(__('Section title'))->maxLength(255),
-                                Relations::multiple('speakers', __('Speakers of this event'))->columnSpanFull(),
+                                Placeholder::make('speakers_hint')
+                                    ->hiddenLabel()
+                                    ->content(__('Speakers are added in the "Speakers" tab above, where you can also pick speakers from previous events.'))
+                                    ->columnSpanFull(),
                             ]),
                         ]),
                         Tab::make('program')->label(__('Programme'))->schema([

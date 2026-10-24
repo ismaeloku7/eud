@@ -278,5 +278,13 @@
     "Pending: runs on the next deploy": "Pendiente: se hará en el próximo despliegue",
     "No data file in this version": "No hay archivo de datos en esta versión",
     "Pages with content": "Páginas con contenido",
-    ":date · :copied files copied · :missing pending download": ":date · :copied archivos copiados · :missing pendientes de descargar"
+    ":date · :copied files copied · :missing pending download": ":date · :copied archivos copiados · :missing pendientes de descargar",
+    "Add a speaker from another event": "Añadir un ponente de otro evento",
+    "Add existing speaker": "Añadir ponente existente",
+    "Editing a speaker changes it in every event where it appears.": "Al editar un ponente, el cambio se aplica en todos los eventos donde aparece.",
+    "New speaker": "Nuevo ponente",
+    "Remove from event": "Quitar del evento",
+    "Speakers are added in the \"Speakers\" tab above, where you can also pick speakers from previous events.": "Los ponentes se añaden en la pestaña «Ponentes» de arriba, donde también puedes elegir ponentes de eventos anteriores.",
+    "Time slots are created in the \"Time slots\" tab of this event.": "Las franjas se crean en la pestaña «Franjas horarias» de este evento.",
+    "Tracks are created in the \"Workshop tracks\" tab of this event.": "Las líneas se crean en la pestaña «Líneas de talleres» de este evento."
 }

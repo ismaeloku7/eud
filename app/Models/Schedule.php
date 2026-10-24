@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
@@ -11,7 +12,7 @@ class Schedule extends Model
 {
     use HasTranslations;
 
-    protected $fillable = ['name', 'date_start', 'date_end'];
+    protected $fillable = ['event_id', 'name', 'date_start', 'date_end'];
 
     public array $translatable = ['name'];
 
@@ -23,5 +24,10 @@ class Schedule extends Model
     public function workshopSchedules(): HasMany
     {
         return $this->hasMany(WorkshopSchedule::class);
+    }
+
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
     }
 }

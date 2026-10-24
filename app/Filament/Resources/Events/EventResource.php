@@ -7,8 +7,11 @@ use App\Filament\Resources\Events\Pages\EditEvent;
 use App\Filament\Resources\Events\Pages\ListEvents;
 use App\Filament\Resources\Events\RelationManagers\DownloadsRelationManager;
 use App\Filament\Resources\Events\RelationManagers\GalleriesRelationManager;
+use App\Filament\Resources\Events\RelationManagers\LinesRelationManager;
 use App\Filament\Resources\Events\RelationManagers\LocalizationsRelationManager;
 use App\Filament\Resources\Events\RelationManagers\ProgramsRelationManager;
+use App\Filament\Resources\Events\RelationManagers\SchedulesRelationManager;
+use App\Filament\Resources\Events\RelationManagers\SpeakersRelationManager;
 use App\Filament\Resources\Events\RelationManagers\WorkshopsRelationManager;
 use App\Filament\Resources\Events\Schemas\EventForm;
 use App\Filament\Resources\Events\Tables\EventsTable;
@@ -60,6 +63,9 @@ class EventResource extends TranslatableResource
         return [
             ProgramsRelationManager::class,
             WorkshopsRelationManager::class,
+            SpeakersRelationManager::class,
+            SchedulesRelationManager::class,
+            LinesRelationManager::class,
             LocalizationsRelationManager::class,
             GalleriesRelationManager::class,
             DownloadsRelationManager::class,

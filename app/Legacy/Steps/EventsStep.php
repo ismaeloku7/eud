@@ -2,6 +2,7 @@
 
 namespace App\Legacy\Steps;
 
+use App\Legacy\EventScoping;
 use App\Legacy\LegacyContext;
 use App\Legacy\TableCopy;
 
@@ -50,6 +51,8 @@ class EventsStep implements ImportStep
         TableCopy::for('workshops_schedules')
             ->requires(['workshop_id' => 'workshops', 'schedule_id' => 'schedules', 'localization_id' => 'localizations'])
             ->run($context);
+
+        EventScoping::assign();
 
         TableCopy::for('workshops_speakers')->requires(['workshop_id' => 'workshops', 'speaker_id' => 'speakers'])->run($context);
         TableCopy::for('programs_speakers')->requires(['program_id' => 'programs', 'speaker_id' => 'speakers'])->run($context);

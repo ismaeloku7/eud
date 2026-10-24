@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Resources\Tables;
 
+use App\Filament\Support\Tables\Thumbnail;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -18,7 +18,7 @@ class ResourcesTable
     {
         return $table
             ->columns([
-                ImageColumn::make('image')->label('')->disk('public')->square(),
+                Thumbnail::make('image')->square(),
                 TextColumn::make('title')->label(__('Title'))->searchable()->sortable()->wrap()->description(fn ($record) => $record->author),
                 TextColumn::make('ministries.name')->label(__('Ministries'))->badge()->toggleable(),
                 TextColumn::make('categories.name')->label(__('Categories'))->badge()->color('gray')->toggleable(isToggledHiddenByDefault: true),
