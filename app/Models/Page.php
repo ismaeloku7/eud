@@ -50,10 +50,15 @@ class Page extends Model
         return $query->where('slug', $slug);
     }
 
-    /** Cached lookup used by the public site; cleared on save. */
+    /**
+     * Cached lookup used by the public site; cleared on save. Only the raw
+     * attributes are cached: the cache store refuses to unserialize models.
+     */
     public static function findBySlug(string $slug): ?self
     {
-        return cache()->rememberForever("page:{$slug}", fn () => static::query()->slug($slug)->first()) ?: null;
+        $attributes = cache()->rememberForever("page:{$slug}", fn () => static::query()->slug($slug)->first()?->getAttributes() ?: []);
+
+        return $attributes === [] ? null : static::query()->hydrate([$attributes])->first();
     }
 
     protected static function booted(): void

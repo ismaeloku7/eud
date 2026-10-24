@@ -29,7 +29,9 @@ class Site
     /** @return Collection<int, Ministry> ordered as shown in menus */
     public function ministries(): Collection
     {
-        return $this->ministries ??= cache()->rememberForever('site:ministries', fn () => Ministry::query()->orderBy('position')->orderBy('id')->get());
+        $rows = cache()->rememberForever('site:ministries', fn () => Ministry::query()->orderBy('position')->orderBy('id')->get()->map->getAttributes()->all());
+
+        return $this->ministries ??= Ministry::query()->hydrate($rows);
     }
 
     /** @return array<int, array{slug: string, name: string, default?: bool}> */
