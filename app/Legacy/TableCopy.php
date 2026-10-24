@@ -143,6 +143,10 @@ final class TableCopy
     public function run(LegacyContext $context): int
     {
         $targetColumns = array_fill_keys(Schema::getColumnListing($this->targetTable), true);
+        $required = collect(Schema::getColumns($this->targetTable))
+            ->reject(fn (array $column): bool => $column['nullable'] || $column['default'] !== null || $column['auto_increment'])
+            ->pluck('name')
+            ->all();
         $imported = 0;
         $skipped = 0;
 
@@ -152,11 +156,11 @@ final class TableCopy
             ($this->query)($query);
         }
 
-        $query->chunk(300, function (Collection $rows) use (&$imported, &$skipped, $targetColumns, $context): void {
+        $query->chunk(300, function (Collection $rows) use (&$imported, &$skipped, $targetColumns, $required, $context): void {
             $prepared = [];
 
             foreach ($rows as $row) {
-                $row = $this->prepare((array) $row, $targetColumns, $context);
+                $row = $this->prepare((array) $row, $targetColumns, $required, $context);
 
                 if ($row === null) {
                     $skipped++;
@@ -187,9 +191,10 @@ final class TableCopy
     /**
      * @param  array<string, mixed>  $row
      * @param  array<string, true>  $targetColumns
+     * @param  array<int, string>  $required  NOT NULL columns without default in the new table
      * @return array<string, mixed>|null
      */
-    private function prepare(array $row, array $targetColumns, LegacyContext $context): ?array
+    private function prepare(array $row, array $targetColumns, array $required, LegacyContext $context): ?array
     {
         foreach ($this->renames as $from => $to) {
             if (array_key_exists($from, $row)) {
@@ -241,6 +246,12 @@ final class TableCopy
 
             if ($row === null) {
                 return null;
+            }
+        }
+
+        foreach ($required as $column) {
+            if (array_key_exists($column, $row) && $row[$column] === null) {
+                $row[$column] = in_array($column, $this->translatable, true) ? '{}' : '';
             }
         }
 

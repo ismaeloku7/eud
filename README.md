@@ -57,12 +57,16 @@ php artisan filament:assets # regenerar assets del panel tras actualizar Filamen
 5. **Sitio público** (hecho): vistas portadas del sitio anterior sobre Tailwind 4 y Livewire 4, lógica unificada por ministerio.
 6. **Importación** (hecho): comando `legacy:import` que copia la base de datos y los ficheros del sitio anterior.
 
-## Importar el sitio anterior
+## Despliegue e importación del sitio anterior
 
-1. Rellena `DB_LEGACY_*` en `.env` con la base de datos antigua (solo lectura) y, si está en el mismo servidor, `LEGACY_FILES_PATH` con la carpeta raíz del proyecto antiguo (la que contiene `public/` y `storage/`).
-2. `php artisan migrate --force` y `php artisan db:seed --force` (catálogos, ministerios y páginas vacías).
-3. `php artisan legacy:import --fresh` copia tablas, reescribe rutas de archivos y convierte los módulos antiguos en secciones de página. Se puede repetir: conserva los ids y actualiza en lugar de duplicar.
-4. Copia a `public/images` las imágenes de diseño grandes que no van en git (lista en `docs/MIGRACION.md`).
-5. Entra en `/admin`, revisa Páginas → Ajustes del sitio, Inicio y cada ministerio, y publica.
+El script de despliegue de Forge ejecuta `php artisan site:setup` después de las migraciones. Es seguro repetirlo:
+
+- En el primer despliegue importa una sola vez el contenido del sitio anterior desde `database/legacy/legacy.sqlite.gz` (copia sin sesiones ni registros de la base de datos antigua) y lo anota en la tabla `legacy_imports`.
+- Sin ese archivo, en una base de datos vacía crea catálogos y ministerios.
+- Siempre asegura que existen las páginas fijas y el primer administrador (`ADMIN_EMAIL` / `ADMIN_PASSWORD`, solo se crea una vez).
+
+Los archivos subidos desde el panel antiguo no están en la base de datos. Si la web antigua sigue en línea, `LEGACY_FILES_URL` hace que la importación los descargue; si sus archivos están en el servidor, `LEGACY_FILES_PATH` los copia. Las imágenes del diseño, galerías y ponentes ya vienen en `public/images`.
+
+Para repetir la importación a mano: `php artisan legacy:import --fresh` con `DB_LEGACY_*` apuntando a la base antigua.
 
 Para probar sin la base de datos real, `tests/Fixtures/legacy/` contiene el esquema antiguo y el contenido inicial de las páginas.

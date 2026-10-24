@@ -42,8 +42,7 @@ class ResourcesStep implements ImportStep
         TableCopy::for('files')
             ->paths(['file'])
             ->integers(['size'])
-            ->requires(['language_id' => 'languages'])
-            ->optional(['type_file_id' => 'type_files'])
+            ->optional(['language_id' => 'languages', 'type_file_id' => 'type_files'])
             ->transform(fn (array $row) => $row['model_type'] === 'App\\Models\\Resource' && $context->exists('resources', $row['model_id']) ? $row : null)
             ->run($context);
     }

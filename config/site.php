@@ -5,6 +5,23 @@
 | ministry page and the logo shown for each ministry on the home page.
 */
 return [
+    /*
+    | First administrator, created once by `php artisan site:setup` on deploy.
+    */
+    'admin' => [
+        'name' => env('ADMIN_NAME', 'Admin'),
+        'email' => env('ADMIN_EMAIL'),
+        'password' => env('ADMIN_PASSWORD'),
+    ],
+
+    /*
+    | Previous site, used by the one-time import.
+    */
+    'legacy' => [
+        'files_path' => env('LEGACY_FILES_PATH'),
+        'files_url' => env('LEGACY_FILES_URL'),
+    ],
+
     'ministries' => [
         'cachorros' => [
             'logo' => 'images/cachorros-logo.png',
