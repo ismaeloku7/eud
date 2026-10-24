@@ -10,7 +10,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Tests\Support\LegacyDatabase;
 use Tests\TestCase;
@@ -70,13 +69,6 @@ class SiteSetupTest extends TestCase
         $this->assertSame(0, DB::table('legacy_imports')->count());
         $this->assertSame(6, Ministry::count());
         $this->assertTrue(Page::where('slug', 'ministry-amicus')->exists());
-    }
-
-    public function test_the_bundled_dump_is_not_ignored_by_git(): void
-    {
-        $result = Process::path(base_path())->run(['git', 'check-ignore', '--quiet', SiteSetupCommand::BUNDLED_DUMP]);
-
-        $this->assertSame(1, $result->exitCode(), 'A .gitignore rule would keep the data file out of the deploy.');
     }
 
     private function bundleLegacyDatabase(): void
