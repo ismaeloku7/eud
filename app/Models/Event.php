@@ -63,6 +63,16 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Program::class)->orderBy('date_start');
     }
 
+    public function schedules(): HasMany
+    {
+        return $this->hasMany(Schedule::class)->orderBy('date_start');
+    }
+
+    public function lines(): HasMany
+    {
+        return $this->hasMany(Line::class);
+    }
+
     public function localizations(): HasMany
     {
         return $this->hasMany(Localization::class);

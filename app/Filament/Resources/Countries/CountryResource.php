@@ -6,10 +6,10 @@ use App\Filament\Resources\Countries\Pages\ManageCountries;
 use App\Filament\Support\CatalogueResource;
 use App\Filament\Support\Forms\Relations;
 use App\Filament\Support\Forms\Uploads;
+use App\Filament\Support\Tables\Thumbnail;
 use App\Models\Country;
 use BackedEnum;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
@@ -54,7 +54,7 @@ class CountryResource extends CatalogueResource
     protected static function extraTableColumns(): array
     {
         return [
-            ImageColumn::make('image')->label('')->disk('public')->circular(),
+            Thumbnail::make('image')->circular(),
             TextColumn::make('parent.name')->label(__('Belongs to'))->sortable()->toggleable(),
             TextColumn::make('directors_count')->label(__('Directors'))->counts('directors')->sortable(),
         ];

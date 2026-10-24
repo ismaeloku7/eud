@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Events\Tables;
 
+use App\Filament\Support\Tables\Thumbnail;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -17,7 +17,7 @@ class EventsTable
     {
         return $table
             ->columns([
-                ImageColumn::make('photo_portada')->label('')->disk('public')->square(),
+                Thumbnail::make('photo_portada')->square(),
                 TextColumn::make('title')->label(__('Title'))->searchable()->sortable()->wrap()->description(fn ($record) => $record->subtitle),
                 TextColumn::make('date_start')->label(__('Starts'))->date('d/m/Y')->sortable(),
                 TextColumn::make('date_end')->label(__('Ends'))->date('d/m/Y')->sortable()->toggleable(),

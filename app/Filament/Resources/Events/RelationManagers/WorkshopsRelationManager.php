@@ -47,7 +47,9 @@ class WorkshopsRelationManager extends RelationManager
             ->columns(2)
             ->components([
                 TextInput::make('title')->label(__('Title'))->required()->maxLength(255)->columnSpanFull(),
-                Relations::select('line_id', 'line', __('Track'), 'title'),
+                Relations::select('line_id', 'line', __('Track'), 'title')
+                    ->relationship('line', 'title', modifyQueryUsing: fn ($query, RelationManager $livewire) => $query->where('event_id', $livewire->getOwnerRecord()->getKey()))
+                    ->helperText(__('Tracks are created in the "Workshop tracks" tab of this event.')),
                 TextInput::make('video_url')->label(__('Video URL'))->url()->maxLength(2000),
                 Relations::multiple('speakers', __('Speakers')),
                 Toggle::make('collection')->label(__('Main session'))->inline(false),
@@ -62,7 +64,8 @@ class WorkshopsRelationManager extends RelationManager
                         Select::make('schedule_id')
                             ->label(__('Time slot'))
                             ->required()
-                            ->options(fn (): array => Schedule::query()->orderBy('date_start')->get()
+                            ->helperText(__('Time slots are created in the "Time slots" tab of this event.'))
+                            ->options(fn (RelationManager $livewire): array => Schedule::query()->where('event_id', $livewire->getOwnerRecord()->getKey())->orderBy('date_start')->get()
                                 ->mapWithKeys(fn (Schedule $slot) => [$slot->id => $slot->name.' · '.$slot->date_start->format('d/m H:i')])->all()),
                         Select::make('localization_id')
                             ->label(__('Room'))

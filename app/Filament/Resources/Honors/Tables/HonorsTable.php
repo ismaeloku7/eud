@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Honors\Tables;
 
+use App\Filament\Support\Tables\Thumbnail;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -22,7 +22,7 @@ class HonorsTable
 
         return $table
             ->columns([
-                ImageColumn::make('image')->label('')->disk('public')->circular(),
+                Thumbnail::make('image')->circular(),
                 TextColumn::make('name')->label(__('Name'))->searchable()->sortable()->wrap(),
                 TextColumn::make('ministry.name')->label(__('Ministry'))->badge()->sortable(),
                 TextColumn::make('category.name')->label(__('Category'))->sortable(),

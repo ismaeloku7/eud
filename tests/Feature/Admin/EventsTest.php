@@ -4,6 +4,9 @@ namespace Tests\Feature\Admin;
 
 use App\Filament\Resources\Events\Pages\CreateEvent;
 use App\Filament\Resources\Events\Pages\EditEvent;
+use App\Filament\Resources\Events\RelationManagers\LinesRelationManager;
+use App\Filament\Resources\Events\RelationManagers\SchedulesRelationManager;
+use App\Filament\Resources\Events\RelationManagers\SpeakersRelationManager;
 use App\Filament\Resources\Events\RelationManagers\WorkshopsRelationManager;
 use App\Models\Event;
 use App\Models\Line;
@@ -31,17 +34,15 @@ class EventsTest extends TestCase
     {
         $event = $this->makeEvent();
 
-        foreach (['events', 'events/create', "events/{$event->id}/edit", 'speakers', 'lines', 'schedules'] as $path) {
+        foreach (['events', 'events/create', "events/{$event->id}/edit"] as $path) {
             $this->get("/admin/{$path}")->assertOk();
         }
 
         $this->get('/admin/events')->assertSee('Youth Congress');
     }
 
-    public function test_event_is_created_with_speakers_and_information_blocks(): void
+    public function test_event_is_created_with_information_blocks(): void
     {
-        $speaker = Speaker::create(['name' => ['en' => 'Ana']]);
-
         Livewire::test(CreateEvent::class)
             ->fillForm([
                 'title' => 'Youth Congress',
@@ -49,7 +50,6 @@ class EventsTest extends TestCase
                 'date_start' => '2026-07-01 09:00',
                 'date_end' => '2026-07-05 18:00',
                 'publish' => true,
-                'speakers' => [$speaker->id],
                 'location_recursive' => [['title' => ['en' => 'Hotel'], 'content' => ['en' => '<p>Main street</p>'], 'column' => 2]],
             ])
             ->call('create')
@@ -58,7 +58,6 @@ class EventsTest extends TestCase
         $event = Event::whereSlug('youth-congress')->firstOrFail();
 
         $this->assertTrue($event->publish);
-        $this->assertTrue($event->speakers->contains($speaker));
         $this->assertSame('Hotel', $event->location_recursive[0]['title']['en']);
     }
 
@@ -94,8 +93,8 @@ class EventsTest extends TestCase
     public function test_workshop_is_created_from_the_event_with_a_slot_and_room(): void
     {
         $event = $this->makeEvent();
-        $line = Line::create(['title' => ['en' => 'Leadership'], 'color' => '#ff0000']);
-        $slot = Schedule::create(['name' => ['en' => 'Morning'], 'date_start' => '2026-07-02 10:00', 'date_end' => '2026-07-02 11:00']);
+        $line = Line::create(['event_id' => $event->id, 'title' => ['en' => 'Leadership'], 'color' => '#ff0000']);
+        $slot = Schedule::create(['event_id' => $event->id, 'name' => ['en' => 'Morning'], 'date_start' => '2026-07-02 10:00', 'date_end' => '2026-07-02 11:00']);
         $room = Localization::create(['event_id' => $event->id, 'name' => ['en' => 'Room A']]);
 
         Livewire::test(WorkshopsRelationManager::class, ['ownerRecord' => $event, 'pageClass' => EditEvent::class])
@@ -109,6 +108,50 @@ class EventsTest extends TestCase
         $workshop = $event->workshops()->firstOrFail();
         $this->assertSame('Leading teams', $workshop->title);
         $this->assertTrue($workshop->schedules()->where('localization_id', $room->id)->where('schedule_id', $slot->id)->exists());
+    }
+
+    public function test_a_speaker_from_a_previous_event_can_be_added_without_duplicating_it(): void
+    {
+        $previous = $this->makeEvent();
+        $speaker = Speaker::create(['name' => ['en' => 'Ana García'], 'type' => ['en' => 'Keynote']]);
+        $previous->speakers()->attach($speaker);
+        $event = Event::create(['title' => ['en' => 'Congress 2027'], 'slug' => ['en' => 'congress-2027'], 'date_start' => '2027-07-01', 'date_end' => '2027-07-05']);
+
+        Livewire::test(SpeakersRelationManager::class, ['ownerRecord' => $event, 'pageClass' => EditEvent::class])
+            ->callAction(TestAction::make('attach')->table(), data: ['recordId' => [$speaker->id]])
+            ->assertHasNoActionErrors();
+
+        $this->assertTrue($event->speakers()->whereKey($speaker->id)->exists());
+        $this->assertSame(1, Speaker::count());
+        $this->assertTrue($previous->speakers()->whereKey($speaker->id)->exists(), 'the previous event keeps it');
+    }
+
+    public function test_time_slots_and_tracks_are_created_inside_the_event(): void
+    {
+        $event = $this->makeEvent();
+
+        Livewire::test(SchedulesRelationManager::class, ['ownerRecord' => $event, 'pageClass' => EditEvent::class])
+            ->callAction(TestAction::make('create')->table(), data: ['name' => 'Morning', 'date_start' => '2026-07-02 10:00', 'date_end' => '2026-07-02 11:00'])
+            ->assertHasNoActionErrors();
+
+        Livewire::test(LinesRelationManager::class, ['ownerRecord' => $event, 'pageClass' => EditEvent::class])
+            ->callAction(TestAction::make('create')->table(), data: ['title' => 'Leadership', 'color' => '#ff0000'])
+            ->assertHasNoActionErrors();
+
+        $this->assertSame(1, $event->schedules()->count());
+        $this->assertSame(1, $event->lines()->count());
+    }
+
+    public function test_workshops_only_offer_the_tracks_and_slots_of_their_event(): void
+    {
+        $event = $this->makeEvent();
+        $other = Event::create(['title' => ['en' => 'Other'], 'slug' => ['en' => 'other'], 'date_start' => '2025-01-01', 'date_end' => '2025-01-02']);
+        Line::create(['event_id' => $event->id, 'title' => ['en' => 'Own track']]);
+        $foreign = Line::create(['event_id' => $other->id, 'title' => ['en' => 'Foreign track']]);
+
+        Livewire::test(WorkshopsRelationManager::class, ['ownerRecord' => $event, 'pageClass' => EditEvent::class])
+            ->callAction(TestAction::make('create')->table(), data: ['title' => 'Workshop', 'line_id' => $foreign->id])
+            ->assertHasActionErrors(['line_id']);
     }
 
     private function makeEvent(): Event
