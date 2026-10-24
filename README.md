@@ -83,7 +83,7 @@ $RESTART_QUEUES()
 
 `php artisan site:setup` se ejecuta después de las migraciones y es seguro repetirlo:
 
-- En el primer despliegue importa una sola vez el contenido del sitio anterior desde `database/legacy/legacy-content.db.gz` (copia sin sesiones ni registros de la base de datos antigua) y lo anota en la tabla `legacy_imports`.
+- Si existe `database/legacy/legacy-content.db.gz` (copia SQLite comprimida del contenido del sitio anterior) y no hay importación registrada en `legacy_imports`, la importa una sola vez. El archivo ya se usó en producción y se retiró del repositorio; para repetir una importación, vuelve a añadirlo.
 - Sin ese archivo, en una base de datos vacía crea catálogos y ministerios.
 - Siempre asegura que existen las páginas fijas y el primer administrador (`ADMIN_EMAIL` / `ADMIN_PASSWORD`, solo se crea una vez).
 
