@@ -13,20 +13,20 @@ use Throwable;
  * Legacy rule (convertUrlMigration): anything under images/ or video/ lived in
  * the old public/ folder and ships with this repository, so it keeps its
  * absolute path. Everything else was an upload in storage/app/public: it keeps
- * its relative path on the public disk and is copied from the old site's
- * folder ($legacyRoot) or downloaded from the old site ($legacyUrl).
+ * its relative path on the public disk. During the import such files are only
+ * copied when the old site's folder is on this server ($legacyRoot); the ones
+ * still missing are listed in $uploads and downloaded later (see
+ * `legacy:fetch-files` and LegacyFileController), because downloading during
+ * a deploy would exceed Forge's time limit.
  */
 final class FileCopier
 {
-    /** @var array<string, string> target => missing source */
-    public array $missing = [];
+    /** @var array<int, string> uploaded files referenced by the content and not on the public disk yet */
+    public array $uploads = [];
 
     public int $copied = 0;
 
-    public function __construct(
-        private readonly ?string $legacyRoot,
-        private readonly ?string $legacyUrl = null,
-    ) {}
+    public function __construct(private readonly ?string $legacyRoot) {}
 
     public function path(mixed $value): ?string
     {
@@ -48,7 +48,7 @@ final class FileCopier
             return '/'.$path;
         }
 
-        $this->bring($path, ['storage/app/public/'.$path, 'public/storage/'.$path], 'storage/'.$path);
+        $this->bring($path, ['storage/app/public/'.$path, 'public/storage/'.$path]);
 
         return $path;
     }
@@ -56,19 +56,46 @@ final class FileCopier
     /** Media library files live in storage/app/public/{media id}/{file name}. */
     public function media(int $mediaId, string $fileName): void
     {
-        $this->bring("{$mediaId}/{$fileName}", ["storage/app/public/{$mediaId}/{$fileName}"], "storage/{$mediaId}/{$fileName}");
+        $this->bring("{$mediaId}/{$fileName}", ["storage/app/public/{$mediaId}/{$fileName}"]);
     }
 
     /**
-     * @param  array<int, string>  $candidates  relative to the legacy root, first existing wins
-     * @param  string  $urlPath  relative to the legacy site URL
+     * Downloads one uploaded file from the previous site into the public disk.
      */
-    private function bring(string $target, array $candidates, string $urlPath): void
+    public static function download(string $legacyUrl, string $target, int $timeout = 20): bool
     {
-        if ($this->legacyRoot === null && $this->legacyUrl === null) {
-            return;
+        if (! self::isSafeTarget($target)) {
+            return false;
         }
 
+        try {
+            $url = rtrim($legacyUrl, '/').'/storage/'.implode('/', array_map('rawurlencode', explode('/', $target)));
+            $response = Http::connectTimeout(5)->timeout($timeout)->get($url);
+
+            if ($response->successful() && $response->body() !== '') {
+                Storage::disk('public')->put($target, $response->body());
+
+                return true;
+            }
+        } catch (Throwable) {
+            // The caller reports the file as still missing.
+        }
+
+        return false;
+    }
+
+    /** Relative path inside the public disk, without traversal or hidden segments. */
+    public static function isSafeTarget(string $target): bool
+    {
+        return $target !== ''
+            && ! str_starts_with($target, '/')
+            && ! str_contains($target, '\\')
+            && collect(explode('/', $target))->every(fn (string $segment): bool => $segment !== '' && ! str_starts_with($segment, '.'));
+    }
+
+    /** @param  array<int, string>  $candidates  relative to the legacy root, first existing wins */
+    private function bring(string $target, array $candidates): void
+    {
         $disk = Storage::disk('public');
 
         if ($disk->exists($target)) {
@@ -86,21 +113,6 @@ final class FileCopier
             }
         }
 
-        if ($this->legacyUrl !== null) {
-            try {
-                $response = Http::timeout(30)->retry(2, 500, throw: false)->get(rtrim($this->legacyUrl, '/').'/'.implode('/', array_map('rawurlencode', explode('/', $urlPath))));
-
-                if ($response->successful() && $response->body() !== '') {
-                    $disk->put($target, $response->body());
-                    $this->copied++;
-
-                    return;
-                }
-            } catch (Throwable) {
-                // Reported below as missing.
-            }
-        }
-
-        $this->missing[$target] = $this->legacyUrl ? rtrim($this->legacyUrl, '/').'/'.$urlPath : $candidates[0];
+        $this->uploads[] = $target;
     }
 }

@@ -35,7 +35,7 @@ class ContentStatus extends StatsOverviewWidget
         return [
             Stat::make(__('Import of the previous site'), $import ? __('Done') : __('Not done'))
                 ->description($import
-                    ? __(':date · :copied files copied · :missing missing', ['date' => Carbon::parse($import->created_at)->format('d/m/Y H:i'), 'copied' => $import->files_copied, 'missing' => $import->files_missing])
+                    ? __(':date · :copied files copied · :missing pending download', ['date' => Carbon::parse($import->created_at)->format('d/m/Y H:i'), 'copied' => $import->files_copied, 'missing' => $import->files_missing])
                     : (File::exists(base_path(SiteSetupCommand::BUNDLED_DUMP)) ? __('Pending: runs on the next deploy') : __('No data file in this version')))
                 ->color($import ? ($import->files_missing > 0 ? 'warning' : 'success') : 'danger'),
             Stat::make(__('Resources'), Resource::count()),

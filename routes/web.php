@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LegacyFileController;
 use App\Http\Controllers\Site\EventController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\MinistryController;
@@ -34,3 +35,5 @@ Route::group([
 });
 
 Route::post('resources/{resource}/files/{file}/download', [ResourceController::class, 'download'])->name('resources.download');
+
+Route::get('storage/{path}', LegacyFileController::class)->where('path', '.*')->name('legacy.file');
