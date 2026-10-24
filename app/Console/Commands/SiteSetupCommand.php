@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Legacy\ImportLog;
 use App\Legacy\LegacyImporter;
 use App\Models\Ministry;
 use Database\Seeders\AdminUserSeeder;
@@ -41,6 +42,8 @@ class SiteSetupCommand extends Command
         $this->callSilently('db:seed', ['--class' => PageSeeder::class, '--force' => true]);
         $this->callSilently('db:seed', ['--class' => AdminUserSeeder::class, '--force' => true]);
 
+        $this->startFileDownloads();
+
         $this->info('Site ready.');
 
         return self::SUCCESS;
@@ -78,23 +81,41 @@ class SiteSetupCommand extends Command
                     $warnings++;
                     $this->warn($message);
                 },
-                config('site.legacy.files_url') ?: null,
             );
         } finally {
             DB::purge('legacy');
             File::delete($database);
         }
 
-        DB::table('legacy_imports')->insert([
-            'source' => self::BUNDLED_DUMP,
-            'files_copied' => $files->copied,
-            'files_missing' => count($files->missing),
-            'warnings' => $warnings,
-            'missing' => json_encode(array_values($files->missing), JSON_UNESCAPED_SLASHES),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        ImportLog::record(self::BUNDLED_DUMP, $files, $warnings);
 
-        $this->info(sprintf('Import finished: %d files copied, %d missing, %d warnings.', $files->copied, count($files->missing), $warnings));
+        $this->info(sprintf('Import finished: %d files copied, %d to download in the background, %d warnings.', $files->copied, count(array_unique($files->uploads)), $warnings));
+    }
+
+    /**
+     * Downloads of the previous site's uploads take longer than Forge allows
+     * for a deploy, so they run in a detached process that outlives it.
+     */
+    private function startFileDownloads(): void
+    {
+        if (! config('site.legacy.files_url') || ImportLog::pending() === [] || app()->runningUnitTests()) {
+            return;
+        }
+
+        $command = sprintf(
+            '%s %s legacy:fetch-files',
+            escapeshellarg(PHP_BINARY),
+            escapeshellarg(base_path('artisan')),
+        );
+
+        // Close every inherited descriptor above stderr before detaching: Forge's
+        // deploy waits until all handles to its output are closed.
+        exec(sprintf(
+            'sh -c %s > %s 2>&1 < /dev/null &',
+            escapeshellarg('for fd in $(ls /proc/$$/fd); do [ "$fd" -gt 2 ] && eval "exec $fd>&-"; done; exec setsid '.$command),
+            escapeshellarg(storage_path('logs/legacy-files.log')),
+        ));
+
+        $this->info(sprintf('Downloading %d files from the previous site in the background.', count(ImportLog::pending())));
     }
 }

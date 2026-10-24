@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Legacy\ImportLog;
 use App\Legacy\LegacyImporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,6 @@ class LegacyImportCommand extends Command
     protected $signature = 'legacy:import
         {--only= : Comma separated step names to run (see --steps)}
         {--files= : Root folder of the previous site, to copy uploaded files (default LEGACY_FILES_PATH)}
-        {--url= : Address of the previous site, to download uploaded files (default LEGACY_FILES_URL)}
         {--fresh : Empty the content tables before importing}
         {--steps : List the available steps and exit}';
 
@@ -44,10 +44,8 @@ class LegacyImportCommand extends Command
             return self::FAILURE;
         }
 
-        $legacyUrl = $this->option('url') ?: (config('site.legacy.files_url') ?: null);
-
-        if (! $legacyRoot && ! $legacyUrl) {
-            $this->warn('No legacy files folder or URL given: paths are rewritten but no file is copied.');
+        if (! $legacyRoot) {
+            $this->warn('No legacy files folder given: uploaded files will be listed for `legacy:fetch-files`.');
         }
 
         $warnings = 0;
@@ -61,18 +59,16 @@ class LegacyImportCommand extends Command
                 $warnings++;
                 $this->warn($message);
             },
-            $legacyUrl,
         );
 
+        ImportLog::record('legacy connection', $files, $warnings);
+
         $this->newLine();
-        $this->info(sprintf('Done. %d files copied, %d files missing, %d warnings.', $files->copied, count($files->missing), $warnings));
+        $pending = count(array_unique($files->uploads));
+        $this->info(sprintf('Done. %d files copied, %d files pending, %d warnings.', $files->copied, $pending, $warnings));
 
-        foreach (array_slice($files->missing, 0, 20, true) as $target => $source) {
-            $this->line("  missing: {$source}");
-        }
-
-        if (count($files->missing) > 20) {
-            $this->line('  ... and '.(count($files->missing) - 20).' more');
+        if ($pending > 0) {
+            $this->line('Run `php artisan legacy:fetch-files` to download them from LEGACY_FILES_URL.');
         }
 
         return self::SUCCESS;

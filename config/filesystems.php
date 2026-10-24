@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Not served: /storage/* belongs to the public disk (missing legacy files are fetched by App\Http\Controllers\LegacyFileController).
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

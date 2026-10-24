@@ -87,7 +87,7 @@ $RESTART_QUEUES()
 - Sin ese archivo, en una base de datos vacía crea catálogos y ministerios.
 - Siempre asegura que existen las páginas fijas y el primer administrador (`ADMIN_EMAIL` / `ADMIN_PASSWORD`, solo se crea una vez).
 
-Los archivos subidos desde el panel antiguo no están en la base de datos. Si la web antigua sigue en línea, `LEGACY_FILES_URL` hace que la importación los descargue; si sus archivos están en el servidor, `LEGACY_FILES_PATH` los copia. Las imágenes del diseño, galerías y ponentes ya vienen en `public/images`.
+Los archivos subidos desde el panel antiguo no están en la base de datos. Si sus archivos están en el servidor, `LEGACY_FILES_PATH` los copia durante la importación. Si la web antigua sigue en línea, con `LEGACY_FILES_URL` se descargan después y fuera del despliegue, porque Forge corta los despliegues de más de 10 minutos: `site:setup` lanza `legacy:fetch-files` en segundo plano, y mientras tanto cualquier archivo pendiente que pida un visitante se descarga al vuelo. El escritorio del panel muestra cuántos quedan. Las imágenes del diseño, galerías y ponentes ya vienen en `public/images`.
 
 Para repetir la importación a mano: `php artisan legacy:import --fresh` con `DB_LEGACY_*` apuntando a la base antigua.
 
