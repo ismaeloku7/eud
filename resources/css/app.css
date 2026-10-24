@@ -1,9 +1,30 @@
+
 @import 'tailwindcss';
+@config '../../tailwind.legacy.config.cjs';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+@source '../views';
+@source '../../app/Livewire';
+@source '../../app/View';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+/* Vendor styles used by the public site (sliders, animations, mobile menu). */
+@import './legacy/slick.css' layer(base);
+@import './legacy/aos.css' layer(base);
+@import './legacy/jquery.mmenu.all.css' layer(base);
+@import './legacy/spinner.css' layer(base);
+
+/* Theme of the previous site: fonts and hand-written component rules. */
+@import './legacy/fonts.css' layer(base);
+@import './legacy/theme.css' layer(components);
+@import './legacy/aditional-styles.css' layer(components);
+@import './legacy/custom.css' layer(components);
+
+/* The previous site's container: fluid up to the xl breakpoint, then 1232px. */
+@utility container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1rem;
+
+    @media (min-width: 1280px) {
+        max-width: 1232px;
+    }
 }
