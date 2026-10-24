@@ -84,6 +84,25 @@ return [
             ]) : [],
         ],
 
+        /*
+        | Read-only connection to the previous site's database, used by
+        | `php artisan legacy:import`. Leave DB_LEGACY_DATABASE empty when
+        | the import is finished.
+        */
+        'legacy' => [
+            'driver' => env('DB_LEGACY_DRIVER', 'mysql'),
+            'host' => env('DB_LEGACY_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('DB_LEGACY_PORT', env('DB_PORT', '3306')),
+            'database' => env('DB_LEGACY_DATABASE', ''),
+            'username' => env('DB_LEGACY_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('DB_LEGACY_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'foreign_key_constraints' => false,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),

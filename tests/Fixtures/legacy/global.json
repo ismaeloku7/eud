@@ -1,0 +1,85 @@
+[
+    {
+        "name": "Global Nav",
+        "slug": "global-nav",
+        "template": "text-five",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "Ministries"
+            },
+            "title_2": {
+                "en": "Resources"
+            },
+            "title_3": {
+                "en": "Events"
+            },
+            "title_4": {
+                "en": "Mission"
+            },
+            "title_5": {
+                "en": "About"
+            }
+        }
+    },
+    {
+        "name": "Global Nav Ministry",
+        "slug": "global-nav-ministry",
+        "template": "text-seven",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "General"
+            },
+            "title_2": {
+                "en": "Curriculum",
+                "es": "Currículum"
+            },
+            "title_3": {
+                "en": "Honors"
+            },
+            "title_4": {
+                "en": "Master Guide"
+            },
+            "title_5": {
+                "en": "Excellence Award"
+            },
+            "title_6": {
+                "en": "Uniform"
+            },
+            "title_7": {
+                "en": "Our Countries"
+            }
+        }
+    },
+    {
+        "name": "Global Nav Logo",
+        "slug": "global-nav-logo",
+        "template": "trix-image",
+        "data": {
+            "image_1": "/images/Logo.svg"
+        },
+        "extras": {
+            "content_1": {
+                "en": "<strong>EUD Youth</strong><br>Ministries"
+            }
+        }
+    },
+    {
+        "name": "Global Nav Social",
+        "slug": "global-nav-social",
+        "template": "text-three",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "youth@eud.adventist.org"
+            },
+            "title_2": {
+                "en": "http://www.instagram.com/eudyouth"
+            },
+            "title_3": {
+                "en": "http://www.facebook.com/eudyouthministries"
+            }
+        }
+    }
+]

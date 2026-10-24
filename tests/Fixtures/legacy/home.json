@@ -1,0 +1,206 @@
+[
+    {
+        "name": "Home Main",
+        "slug": "home-main",
+        "template": "trix-text-two-image",
+        "data": {
+            "image_1": "/images/priscilla-du-preez-nF8xhLMmg0c-unsplash.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "EUD Youth Ministries"
+            },
+            "title_2": {
+                "en": "ABOUT US"
+            },
+            "content_1": {
+                "en": "<strong>Empowering</strong> youth<br>to share the <strong>love of Jesus</strong>"
+            }
+        }
+    },
+    {
+        "name": "Home Mission",
+        "slug": "home-mission",
+        "template": "trix-two-text-two",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "MISSION"
+            },
+            "title_2": {
+                "en": "Volunteer today!"
+            },
+            "content_1": {
+                "en": "<b>Vivid Faith</b>"
+            },
+            "content_2": {
+                "en": "Serving others is one of the most fulfilling and life-changing experiences you can live.<br><br>That is why we partner with <a href='https://vividfaith.com'>Vivid Faith</a> to provide you with opportunities to help others in the context of mission all over the world. You can help in various areas, such as but not limited to: evangelism, medicine and health, education, and administration.<br><br>If you are between 18 and 35 years old, and live in a country that is part of the Inter-European Division, the Youth Ministries Department also offers financial support and guidance for each service opportunity. Contact us to learn more."
+            }
+        }
+    },
+    {
+        "name": "Home About",
+        "slug": "home-about",
+        "template": "trix-two-text-three",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "ABOUT US"
+            },
+            "title_2": {
+                "en": "LEARN MORE"
+            },
+            "title_3": {
+                "en": "YOUR YOUTH DIRECTORS"
+            },
+            "content_1": {
+                "en": "<strong>Children and Youth</strong> Our Passion"
+            },
+            "content_2": {
+                "en": "The focus of EUD Youth Ministries is to spiritually, morally and physically equip and empower our church youth to recognize their place in the Church and to encourage them to share the love of Jesus leading others into a saving relationship with Him."
+            }
+        }
+    },
+    {
+        "name": "Home About Director 1",
+        "slug": "home-about-director-1",
+        "template": "text-three-image",
+        "data": {
+            "image_1": "/images/csm_jonatan_tejel.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "JONATAN TEJEL"
+            },
+            "title_2": {
+                "en": "Youth Ministries Director"
+            },
+            "title_3": {
+                "en": "jonatan.tejel@eud.adventist.org"
+            }
+        }
+    },
+    {
+        "name": "Home About Director 2",
+        "slug": "home-about-director-2",
+        "template": "text-three-image",
+        "data": {
+            "image_1": "/images/csm_alex-mora.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "ALEXANDRA MORA"
+            },
+            "title_2": {
+                "en": "AMiCUS and Young Adult Specialist"
+            },
+            "title_3": {
+                "en": "alexandra.mora@eud.adventist.org"
+            }
+        }
+    },
+    {
+        "name": "Home About Director 3",
+        "slug": "home-about-director-3",
+        "template": "text-three-image",
+        "data": {
+            "image_1": "/images/csm_isaac-chia.png"
+        },
+        "extras": {
+            "title_1": {
+                "en": "ISAAC CHÍA"
+            },
+            "title_2": {
+                "en": "Pathfinder Specialist and Graphic Designer"
+            },
+            "title_3": {
+                "en": "isaac.chia@eud.adventist.org"
+            }
+        }
+    },
+    {
+        "name": "Home Counter",
+        "slug": "home-counter",
+        "template": "text",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": "IN THE INTER-EUROPEAN DIVISION THERE ARE…"
+            }
+        }
+    },
+    {
+        "name": "Home Counter 1",
+        "slug": "home-counter-1",
+        "template": "image",
+        "data": {
+            "image_1": "/images/icon-1.png"
+        },
+        "extras": {}
+    },
+    {
+        "name": "Home Counter 2",
+        "slug": "home-counter-2",
+        "template": "image",
+        "data": {
+            "image_1": "/images/icon-2.png"
+        },
+        "extras": {}
+    },
+    {
+        "name": "Home Counter 3",
+        "slug": "home-counter-3",
+        "template": "image",
+        "data": {
+            "image_1": "/images/icon-3.png"
+        },
+        "extras": {}
+    },
+    {
+        "name": "Home Counter 4",
+        "slug": "home-counter-4",
+        "template": "image",
+        "data": {
+            "image_1": "/images/icon-4.png"
+        },
+        "extras": {}
+    },
+    {
+        "name": "Home Counter 5",
+        "slug": "home-counter-5",
+        "template": "image",
+        "data": {
+            "image_1": "/images/icon-5.png"
+        },
+        "extras": {}
+    },
+    {
+        "name": "Home Counter 6",
+        "slug": "home-counter-6",
+        "template": "image",
+        "data": {
+            "image_1": "/images/icon-6.png"
+        },
+        "extras": {}
+    },
+    {
+        "name": "Home Contact",
+        "slug": "home-contact",
+        "template": "trix-two-text-two",
+        "data": {},
+        "extras": {
+            "title_1": {
+                "en": ""
+            },
+            "title_2": {
+                "en": "CONTACT"
+            },
+            "content_1": {
+                "en": "<strong>How can we help you?</strong>"
+            },
+            "content_2": {
+                "en": ""
+            }
+        }
+    }
+]

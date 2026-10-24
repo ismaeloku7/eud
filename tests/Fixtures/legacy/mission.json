@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Mission",
+    "slug": "mission",
+    "template": "trix-two-text",
+    "data": {},
+    "extras": {
+      "title_1": {
+        "en": "MISSION"
+      },
+      "content_1": {
+        "en": "Vivid Faith"
+      },
+      "content_2": {
+        "en": "Serving others is one of the most fulfilling and life-changing experiences you can volunteer for.<br><br>Vivid Faith exists to provide you with opportunities to help others in the context of mission. You can help in various areas, such as: evangelism, medicine and health, education, and administration, amongst others.<br><br>In partnership with <a href=\"https://www.adventistvolunteers.org\">Adventist Volunteer Service</a>, we offer service opportunities around the world.<br><br>If you are between 18 and 35 years old, AYS also offers you financial support and guidance for each service opportunity."
+      }
+    }
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Ministry General Featured Honors",
+    "slug": "ministry-general-featured-honors",
+    "template": "text-two",
+    "data": {},
+    "extras": {
+      "title_1": {
+        "en": "FEATURED HONORS"
+      },
+      "title_2": {
+        "en": "Show All"
+      }
+    }
+  },
+  {
+    "name": "Ministry General Section All About",
+    "slug": "ministry-general-section-all-about",
+    "template": "text",
+    "data": {},
+    "extras": {
+      "title_1": {
+        "en": "ALL ABOUT PATHFINDERS"
+      }
+    }
+  },
+  {
+    "name": "Ministry General Section Maps",
+    "slug": "ministry-general-section-maps",
+    "template": "text",
+    "data": {},
+    "extras": {
+      "title_1": {
+        "en": "LEARN MORE ABOUT OUR PATHFINDER MINISTRIES"
+      }
+    }
+  }
+]
