@@ -271,5 +271,12 @@
     "download": "Descargar",
     "EVENTS": "EVENTOS",
     "SHOW VIDEO": "VER VIDEO",
-    "Ir a youtube": "Go to youtube"
+    "Ir a youtube": "Go to youtube",
+    "Import of the previous site": "Importación del sitio anterior",
+    "Done": "Hecha",
+    "Not done": "No hecha",
+    ":date · :copied files copied · :missing missing": ":date · :copied archivos copiados · :missing pendientes",
+    "Pending: runs on the next deploy": "Pendiente: se hará en el próximo despliegue",
+    "No data file in this version": "No hay archivo de datos en esta versión",
+    "Pages with content": "Páginas con contenido"
 }
