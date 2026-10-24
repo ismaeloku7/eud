@@ -2,15 +2,19 @@
 
 namespace App\Legacy;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Throwable;
 
 /**
- * Rewrites legacy file references to paths on the public disk and, when the
- * previous site's folder is available, copies the files across.
+ * Rewrites legacy file references and brings the uploaded files across.
  *
  * Legacy rule (convertUrlMigration): anything under images/ or video/ lived in
- * public/, everything else in storage/app/public.
+ * the old public/ folder and ships with this repository, so it keeps its
+ * absolute path. Everything else was an upload in storage/app/public: it keeps
+ * its relative path on the public disk and is copied from the old site's
+ * folder ($legacyRoot) or downloaded from the old site ($legacyUrl).
  */
 final class FileCopier
 {
@@ -19,7 +23,10 @@ final class FileCopier
 
     public int $copied = 0;
 
-    public function __construct(private readonly ?string $legacyRoot) {}
+    public function __construct(
+        private readonly ?string $legacyRoot,
+        private readonly ?string $legacyUrl = null,
+    ) {}
 
     public function path(mixed $value): ?string
     {
@@ -38,12 +45,10 @@ final class FileCopier
         $path = Str::startsWith($path, 'public/') ? Str::after($path, 'public/') : $path;
 
         if (Str::contains($path, ['images/', 'video/'])) {
-            $this->copy(['public/'.$path, 'storage/app/public/'.$path], $target = 'legacy/'.$path);
-
-            return $target;
+            return '/'.$path;
         }
 
-        $this->copy(['storage/app/public/'.$path, 'public/'.$path], $path);
+        $this->bring($path, ['storage/app/public/'.$path, 'public/storage/'.$path], 'storage/'.$path);
 
         return $path;
     }
@@ -51,13 +56,16 @@ final class FileCopier
     /** Media library files live in storage/app/public/{media id}/{file name}. */
     public function media(int $mediaId, string $fileName): void
     {
-        $this->copy(["storage/app/public/{$mediaId}/{$fileName}"], "{$mediaId}/{$fileName}");
+        $this->bring("{$mediaId}/{$fileName}", ["storage/app/public/{$mediaId}/{$fileName}"], "storage/{$mediaId}/{$fileName}");
     }
 
-    /** @param  array<int, string>  $candidates  relative to the legacy root, first existing wins */
-    private function copy(array $candidates, string $target): void
+    /**
+     * @param  array<int, string>  $candidates  relative to the legacy root, first existing wins
+     * @param  string  $urlPath  relative to the legacy site URL
+     */
+    private function bring(string $target, array $candidates, string $urlPath): void
     {
-        if ($this->legacyRoot === null) {
+        if ($this->legacyRoot === null && $this->legacyUrl === null) {
             return;
         }
 
@@ -67,18 +75,32 @@ final class FileCopier
             return;
         }
 
-        foreach ($candidates as $candidate) {
+        foreach ($this->legacyRoot ? $candidates : [] as $candidate) {
             $source = rtrim($this->legacyRoot, '/').'/'.$candidate;
 
             if (is_file($source)) {
-                $disk->makeDirectory(dirname($target));
-                copy($source, $disk->path($target));
+                $disk->put($target, file_get_contents($source));
                 $this->copied++;
 
                 return;
             }
         }
 
-        $this->missing[$target] = $candidates[0];
+        if ($this->legacyUrl !== null) {
+            try {
+                $response = Http::timeout(30)->retry(2, 500, throw: false)->get(rtrim($this->legacyUrl, '/').'/'.implode('/', array_map('rawurlencode', explode('/', $urlPath))));
+
+                if ($response->successful() && $response->body() !== '') {
+                    $disk->put($target, $response->body());
+                    $this->copied++;
+
+                    return;
+                }
+            } catch (Throwable) {
+                // Reported below as missing.
+            }
+        }
+
+        $this->missing[$target] = $this->legacyUrl ? rtrim($this->legacyUrl, '/').'/'.$urlPath : $candidates[0];
     }
 }

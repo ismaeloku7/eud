@@ -12,6 +12,7 @@ class LegacyImportCommand extends Command
     protected $signature = 'legacy:import
         {--only= : Comma separated step names to run (see --steps)}
         {--files= : Root folder of the previous site, to copy uploaded files (default LEGACY_FILES_PATH)}
+        {--url= : Address of the previous site, to download uploaded files (default LEGACY_FILES_URL)}
         {--fresh : Empty the content tables before importing}
         {--steps : List the available steps and exit}';
 
@@ -43,8 +44,10 @@ class LegacyImportCommand extends Command
             return self::FAILURE;
         }
 
-        if (! $legacyRoot) {
-            $this->warn('No legacy files folder given: paths are rewritten but no file is copied.');
+        $legacyUrl = $this->option('url') ?: (env('LEGACY_FILES_URL') ?: null);
+
+        if (! $legacyRoot && ! $legacyUrl) {
+            $this->warn('No legacy files folder or URL given: paths are rewritten but no file is copied.');
         }
 
         $warnings = 0;
@@ -58,6 +61,7 @@ class LegacyImportCommand extends Command
                 $warnings++;
                 $this->warn($message);
             },
+            $legacyUrl,
         );
 
         $this->newLine();

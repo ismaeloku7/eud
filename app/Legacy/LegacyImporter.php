@@ -51,7 +51,7 @@ final class LegacyImporter
     /**
      * @param  array<int, string>  $only  step names, empty for all
      */
-    public function run(array $only, ?string $legacyRoot, bool $fresh, Closure $info, Closure $warn): FileCopier
+    public function run(array $only, ?string $legacyRoot, bool $fresh, Closure $info, Closure $warn, ?string $legacyUrl = null): FileCopier
     {
         $unknown = array_diff($only, self::stepNames());
 
@@ -59,7 +59,7 @@ final class LegacyImporter
             throw new InvalidArgumentException('Unknown import steps: '.implode(', ', $unknown));
         }
 
-        $context = new LegacyContext(DB::connection('legacy'), new FileCopier($legacyRoot), $info, $warn);
+        $context = new LegacyContext(DB::connection('legacy'), new FileCopier($legacyRoot, $legacyUrl), $info, $warn);
 
         if ($fresh) {
             $this->truncateContent();

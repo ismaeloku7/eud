@@ -44,7 +44,7 @@ class LegacyImportTest extends TestCase
     {
         $this->artisan('legacy:import', ['--files' => $this->legacyRoot])->assertSuccessful();
 
-        $this->assertSame('editor@eud.test', User::first()->email);
+        $this->assertTrue(User::where('email', 'editor@eud.test')->exists());
         $this->assertSame('España', Country::find(1)->getTranslation('name', 'es'));
         $this->assertTrue(Country::find(2)->parent->is(Country::find(1)));
 
@@ -58,7 +58,7 @@ class LegacyImportTest extends TestCase
         Storage::disk('public')->assertExists('files/manual.pdf');
 
         $honor = Honor::find(1);
-        $this->assertSame('legacy/images/honors/camping.png', $honor->image, 'public images move under legacy/');
+        $this->assertSame('/images/honors/camping.png', $honor->image, 'design images keep their public path');
         $this->assertNull($honor->level_id, 'dangling level reference becomes null');
         $this->assertSame(1, $honor->pdfs()->count());
 
@@ -66,7 +66,7 @@ class LegacyImportTest extends TestCase
 
         $event = Event::find(1);
         $this->assertSame('youth-congress', $event->getTranslation('slug', 'en'));
-        $this->assertTrue($event->publish);
+        $this->assertTrue($event->publish, 'the old site showed every event, so imported events are published');
         $this->assertSame('Hotel', $event->location_recursive[0]['title']['en']);
         $this->assertSame(1, $event->workshops()->first()->schedules()->count());
     }
@@ -78,7 +78,7 @@ class LegacyImportTest extends TestCase
         $home = Page::where('slug', 'home')->firstOrFail();
         $this->assertSame('EUD Youth Ministries', $home->section('hero')->text('kicker'));
         $this->assertStringContainsString('love of Jesus', $home->section('hero')->text('heading'));
-        $this->assertSame('legacy/images/priscilla-du-preez-nF8xhLMmg0c-unsplash.png', $home->section('hero')->raw('image'));
+        $this->assertSame('/images/priscilla-du-preez-nF8xhLMmg0c-unsplash.png', $home->section('hero')->raw('image'));
         $this->assertCount(3, $home->section('about')->items('team'));
         $this->assertCount(6, $home->section('partners')->items('logos'));
 
@@ -105,6 +105,7 @@ class LegacyImportTest extends TestCase
         $this->artisan('legacy:import')->assertSuccessful();
 
         $this->assertSame(1, Resource::count());
+        $this->assertSame(1, User::count(), 'users are matched by e-mail');
         $this->assertSame(1, Event::count());
         $this->assertSame(3, DB::table('ministries')->count());
     }
@@ -154,7 +155,7 @@ class LegacyImportTest extends TestCase
             'id' => 1, 'slug' => $en('youth-congress'), 'title' => $en('Youth Congress'), 'subtitle' => $en(''), 'description' => $en('<p>About</p>'),
             'date_start' => '2026-07-01 09:00:00', 'date_end' => '2026-07-05 18:00:00', 'type' => $en('Congress'), 'slogan' => $en(''), 'quote' => $en(''),
             'photo_portada' => 'nova/cover.jpg', 'url_youtube' => '', 'lat' => '', 'long' => '', 'location' => $en('Madrid'), 'url_gallery' => '',
-            'registration_eud' => $en(''), 'registration_non_eud' => $en(''), 'tags' => $en(''), 'publish' => 1,
+            'registration_eud' => $en(''), 'registration_non_eud' => $en(''), 'tags' => $en(''), 'publish' => 0,
             'location_recursive' => json_encode([['title' => ['en' => 'Hotel'], 'content' => ['en' => '<p>Main street</p>'], 'column' => 2]]),
         ]);
         $legacy->table('localizations')->insert(['id' => 1, 'name' => $en('Room A'), 'capacity' => $en('100'), 'event_id' => 1]);

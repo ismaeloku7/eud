@@ -17,6 +17,7 @@ class EventsStep implements ImportStep
         TableCopy::for('speakers')->translatable(['name', 'description', 'type'])->paths(['photo'])->run($context);
         TableCopy::for('schedules')->translatable(['name'])->run($context);
 
+        // The previous site ignored `publish` on the public pages, so every event was visible.
         TableCopy::for('events')
             ->translatable([
                 'slug', 'title', 'subtitle', 'description', 'type', 'slogan', 'quote', 'tags',
@@ -27,7 +28,8 @@ class EventsStep implements ImportStep
             ])
             ->json(['location_recursive', 'registration_recursive'])
             ->paths(['photo_portada', 'facebook_banner', 'image_about', 'program_image', 'program_download'])
-            ->booleans(['publish', 'registration'])
+            ->booleans(['registration'])
+            ->transform(fn (array $row) => [...$row, 'publish' => 1])
             ->run($context);
 
         TableCopy::for('localizations')->translatable(['name', 'capacity'])->requires(['event_id' => 'events'])->run($context);
