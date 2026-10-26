@@ -171,9 +171,19 @@
                                         <img src="{{ Media::url($item->image, 'images/resources-placeholder.png') }}" alt="{{ $item->title }}" loading="lazy">
                                         <div class="absolute top-0 bottom-0 left-0 right-0 flex flex-wrap items-center justify-center invisible transition-all opacity-0 place-content-center project-download">
                                             <a class="my-2 btn hover:bg-primary hover:text-white mobile:mb-3" href="{{ route('resources.show', ['slug' => $item->slug]) }}">{{ __('resources.learn_more') }}</a>
-                                            @if ($item->files->isNotEmpty())
+                                            @if ($item->files->count() > 1)
                                                 <br>
                                                 <button type="button" class="my-2 btn hover:bg-primary hover:text-white mobile:mb-3" @click="downloads = {{ $item->id }}">{{ __('resources.download') }}</button>
+                                            @elseif ($file = $item->files->first())
+                                                <br>
+                                                @if ($file->url)
+                                                    <a class="my-2 btn hover:bg-primary hover:text-white mobile:mb-3" href="{{ $file->url }}" target="_blank" rel="noopener">{{ __('resources.go_to_web') }}</a>
+                                                @else
+                                                    <form method="post" action="{{ route('resources.download', [$item, $file]) }}" class="my-2">
+                                                        @csrf
+                                                        <button type="submit" class="btn hover:bg-primary hover:text-white mobile:mb-3">{{ __('resources.download') }}</button>
+                                                    </form>
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -190,7 +200,7 @@
                     </div>
                 </div>
 
-                @foreach ($resource->items->filter(fn ($item) => $item->files->isNotEmpty()) as $item)
+                @foreach ($resource->items->filter(fn ($item) => $item->files->count() > 1) as $item)
                     <div class="fixed inset-0 z-40 flex items-center justify-center px-4" x-show="downloads === {{ $item->id }}" x-cloak style="background-color: rgba(0, 0, 0, .6);" @click="downloads = null" role="dialog" aria-modal="true" aria-labelledby="downloads-title-{{ $item->id }}">
                         <div class="w-full max-w-lg rounded-xl bg-white p-8 mobile:p-6" style="max-height: 90vh; overflow-y: auto;" @click.stop>
                             <div class="mb-6 flex items-start justify-between gap-4">
