@@ -1,6 +1,8 @@
 @php
     $about = $page->section('about');
     $places = __('amicus.places');
+    // Box tints as background colours (not element opacity) so the black text stays fully opaque.
+    $tint = fn (int $key): string => 'background-color: rgba(104, 71, 195, '.($key % 2 == 0 ? '.6' : '.8').');';
 @endphp
 <div class="pb-0 mobile:pb-0 mobile:pt-8">
     <div class="max-w-5.5xl relative mx-auto w-full px-4 text-center mobile:px-6">
@@ -14,14 +16,14 @@
     {{-- places desktop --}}
     <div class="mx-auto mb-18 hidden max-w-6xl flex-wrap lg:flex mobile:mb-9 mobile:pt-10">
         @foreach ($places as $key => $place)
-            <div class="pointer-titles {{ $key % 2 == 0 ? 'opacity-60' : 'opacity-80' }} flex w-1/3 flex-col items-center justify-start bg-purple p-6 pt-8 text-center text-white"
-                style="height: 19rem;padding: 0.6rem;padding-top: 1.6rem;" x-on:click="changeUrl({{ $tabId($place['tab']) }}, '{{ $site->tabUrl($ministry, ['slug' => $place['tab']]) }}')">
+            <div class="pointer-titles flex w-1/3 flex-col items-center justify-start text-center text-white"
+                style="{{ $tint($key) }} min-height: 19rem; padding: 3rem 1rem 2rem;" x-on:click="changeUrl({{ $tabId($place['tab']) }}, '{{ $site->tabUrl($ministry, ['slug' => $place['tab']]) }}')">
                 <img class="{{ $place['tab'] === 'be' ? 'w-17 h-20' : 'w-20 h-20' }} inline-block" src="{{ asset($place['image']) }}" alt="">
                 <h3 class="my-5"><strong>{{ $place['title'] }}</strong></h3>
-                <p class="text-l font-bold text-white">{!! $place['description'] !!}</p>
+                <p class="text-l font-bold" style="color: #000;">{!! $place['description'] !!}</p>
             </div>
         @endforeach
-        <div class="opacity-80 flex w-1/3 flex-col items-center justify-center bg-purple p-6 pt-8 text-center text-white" style="height: 19rem;">
+        <div class="flex w-1/3 flex-col items-center justify-center p-6 pt-8 text-center text-white" style="{{ $tint(1) }} min-height: 19rem;">
             <img class="w-30 h-25 inline-block" src="{{ asset('images/amicus-logo-ic.png') }}" alt="AMiCUS">
         </div>
     </div>
@@ -29,14 +31,14 @@
     {{-- places mobile (slick) --}}
     <div class="places-about mx-auto mb-18 flex w-full flex-wrap overflow-x-hidden lg:hidden mobile:mb-9 mobile:pt-10">
         @foreach ($places as $key => $place)
-            <div class="pointer-titles {{ $key % 2 == 0 ? 'opacity-60' : 'opacity-80' }} flex h-96 w-full flex-col items-center justify-start break-words bg-purple p-6 pt-8 text-center text-white"
+            <div class="pointer-titles flex h-96 w-full flex-col items-center justify-start break-words p-6 pt-12 text-center text-white" style="{{ $tint($key) }}"
                 x-on:click="changeUrl({{ $tabId($place['tab']) }}, '{{ $site->tabUrl($ministry, ['slug' => $place['tab']]) }}')">
                 <img class="w-24 h-24 mx-auto inline-block" src="{{ asset($place['image']) }}" alt="">
                 <h2 class="my-5 mobile:my-2"><strong>{{ $place['title'] }}</strong></h2>
-                <p class="text-xl font-bold text-white mobile:px-2 mobile:text-lg">{!! $place['description'] !!}</p>
+                <p class="text-xl font-bold mobile:px-2 mobile:text-lg" style="color: #000;">{!! $place['description'] !!}</p>
             </div>
         @endforeach
-        <div class="opacity-80 flex h-96 w-full flex-col items-center justify-center bg-purple p-6 text-center text-white">
+        <div class="flex h-96 w-full flex-col items-center justify-center p-6 text-center text-white" style="{{ $tint(1) }}">
             <img class="w-40 h-32 mx-auto inline-block" src="{{ asset('images/amicus-logo-ic.png') }}" alt="AMiCUS">
         </div>
     </div>
