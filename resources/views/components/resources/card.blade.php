@@ -20,9 +20,9 @@
         </div>
         <span class="white-circle-arrow"><img src="{{ asset('images/circle-arrow.png') }}" alt=""></span>
     </a>
-    <div class="flex items-center justify-between grid-view-block">
+    <div class="flex items-center justify-between gap-4 grid-view-block">
         <h5><a href="{{ $url }}">{{ $resource->title }}</a></h5>
-        <div class="flex items-center">
+        <div class="flex items-center gap-1 shrink-0">
             <img src="{{ asset('images/Download_Icon.png') }}" alt="">
             <p>{{ $resource->quantity }}</p>
         </div>
