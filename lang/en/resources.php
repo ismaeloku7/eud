@@ -25,5 +25,7 @@ return [
     'in_this_collection' => 'In this collection',
     'you_may_also_like' => 'You may also like…',
     'choose_language' => 'Language',
+    'choose_download_language' => 'Choose the language to download',
+    'close' => 'Close',
     'no_file_for_language' => 'Not available in this language',
 ];

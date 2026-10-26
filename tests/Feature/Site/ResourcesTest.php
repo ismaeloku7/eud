@@ -131,6 +131,21 @@ class ResourcesTest extends TestCase
             ->assertDontSee(__('resources.document_details'));
     }
 
+    public function test_collection_items_offer_a_download_per_language(): void
+    {
+        $item = $this->resource('Campus Guide', [$this->english, $this->spanish]);
+        $collection = Resource::create(['slug' => 'starter-kit', 'title' => ['en' => 'Starter Kit'], 'collection' => true]);
+        $collection->items()->attach($item);
+        [$englishFile, $spanishFile] = $item->files->all();
+
+        $this->get('/resources/starter-kit')
+            ->assertOk()
+            ->assertSee(__('resources.choose_download_language'))
+            ->assertSee("downloads = {$item->id}", false)
+            ->assertSee(route('resources.download', [$item, $englishFile]))
+            ->assertSee(route('resources.download', [$item, $spanishFile]));
+    }
+
     public function test_download_counts_and_redirects_to_the_file(): void
     {
         $manual = $this->resource('Pathfinder Manual', [$this->english]);

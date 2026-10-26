@@ -1,8 +1,8 @@
 @php
     use App\Support\Media;
 
-    // Languages offered: the resource's own files, or the files of the collection items.
-    $languageOptions = ($resource->collection ? $resource->items->flatMap->files : $resource->files)
+    // Languages offered by the resource's own files; collection items pick theirs in a modal.
+    $languageOptions = $resource->files
         ->filter(fn ($file) => $file->language)
         ->unique('language_id')
         ->map(fn ($file) => ['id' => $file->language_id, 'name' => (string) $file->language->name])
@@ -160,7 +160,7 @@
         </div>
 
         @if ($resource->collection && $resource->items->isNotEmpty())
-            <div class="projects">
+            <div class="projects" x-data="{ downloads: null }" @keydown.escape.window="downloads = null">
                 <div class="container-xl mobile:px-6">
                     <h2 class="mb-7"><strong>{{ __('resources.in_this_collection') }}</strong></h2>
                     <div class="flex flex-wrap mb-20 -mx-4 mobile:mb-7">
@@ -171,13 +171,10 @@
                                         <img src="{{ Media::url($item->image, 'images/resources-placeholder.png') }}" alt="{{ $item->title }}" loading="lazy">
                                         <div class="absolute top-0 bottom-0 left-0 right-0 flex flex-wrap items-center justify-center invisible transition-all opacity-0 place-content-center project-download">
                                             <a class="my-2 btn hover:bg-primary hover:text-white mobile:mb-3" href="{{ route('resources.show', ['slug' => $item->slug]) }}">{{ __('resources.learn_more') }}</a>
-                                            <br>
-                                            @foreach ($item->files as $file)
-                                                <form method="post" action="{{ route('resources.download', [$item, $file]) }}" class="my-2 js-file" data-language="{{ $file->language_id }}" data-fallback="{{ $loop->first ? '1' : '0' }}" hidden>
-                                                    @csrf
-                                                    <button type="submit" class="btn hover:bg-primary hover:text-white mobile:mb-3">{{ __('resources.download') }}</button>
-                                                </form>
-                                            @endforeach
+                                            @if ($item->files->isNotEmpty())
+                                                <br>
+                                                <button type="button" class="my-2 btn hover:bg-primary hover:text-white mobile:mb-3" @click="downloads = {{ $item->id }}">{{ __('resources.download') }}</button>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between grid-view-block">
@@ -192,6 +189,44 @@
                         @endforeach
                     </div>
                 </div>
+
+                @foreach ($resource->items->filter(fn ($item) => $item->files->isNotEmpty()) as $item)
+                    <div class="fixed inset-0 z-40 flex items-center justify-center px-4" x-show="downloads === {{ $item->id }}" x-cloak style="background-color: rgba(0, 0, 0, .6);" @click="downloads = null" role="dialog" aria-modal="true" aria-labelledby="downloads-title-{{ $item->id }}">
+                        <div class="w-full max-w-lg rounded-xl bg-white p-8 mobile:p-6" style="max-height: 90vh; overflow-y: auto;" @click.stop>
+                            <div class="mb-6 flex items-start justify-between gap-4">
+                                <div>
+                                    <h4 id="downloads-title-{{ $item->id }}" class="mb-1 text-primary"><strong>{{ $item->title }}</strong></h4>
+                                    <p class="mb-0 text-primary">{{ __('resources.choose_download_language') }}</p>
+                                </div>
+                                <button type="button" class="shrink-0" @click="downloads = null" aria-label="{{ __('resources.close') }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 26 26">
+                                        <g fill="none" fill-rule="evenodd" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                                            <path d="M1.5 1.499l23 23M24.5 1.499l-23 23" />
+                                        </g>
+                                    </svg>
+                                </button>
+                            </div>
+                            <ul>
+                                @foreach ($item->files->sortBy(fn ($file) => (string) $file->language?->name) as $file)
+                                    <li class="flex items-center justify-between gap-4 border-b-2 border-solid border-grey_300 py-3 last:border-b-0">
+                                        <div class="min-w-0 text-primary">
+                                            <strong>{{ $file->language?->name ?? __('resources.download') }}</strong>
+                                            <span class="block whitespace-nowrap text-sm">{{ collect([$file->type?->name, $file->size ? $file->humanSize() : null])->filter()->join(' · ') }}</span>
+                                        </div>
+                                        @if ($file->url)
+                                            <a class="shrink-0 whitespace-nowrap rounded-btn bg-medium_blue px-5 py-2 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-primary" href="{{ $file->url }}" target="_blank" rel="noopener">{{ __('resources.go_to_web') }}</a>
+                                        @else
+                                            <form method="post" action="{{ route('resources.download', [$item, $file]) }}" class="shrink-0">
+                                                @csrf
+                                                <button type="submit" class="shrink-0 whitespace-nowrap rounded-btn bg-medium_blue px-5 py-2 text-sm font-bold uppercase tracking-wide text-white transition hover:bg-primary">{{ __('resources.download') }}</button>
+                                            </form>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         @endif
 
@@ -213,6 +248,8 @@
 
     @push('styles')
         <style>
+            [x-cloak] { display: none !important; }
+
             @media (max-width: 767px) {
                 .event-category ul li { width: auto; }
             }
@@ -226,18 +263,7 @@
                 const files = Array.from(page.querySelectorAll('.js-file'));
 
                 function show(language) {
-                    const groups = new Map();
-                    files.forEach((el) => {
-                        const key = el.closest('.project-download') || el.closest('.document-detail') || el.parentElement;
-                        if (!groups.has(key)) groups.set(key, []);
-                        groups.get(key).push(el);
-                    });
-                    groups.forEach((els) => {
-                        const matches = els.filter((el) => el.dataset.language === String(language));
-                        // Collection items without the chosen language fall back to their first file.
-                        const visible = matches.length ? matches : els.filter((el) => el.dataset.fallback === '1');
-                        els.forEach((el) => { el.hidden = ! visible.includes(el); });
-                    });
+                    files.forEach((el) => { el.hidden = el.dataset.language !== String(language); });
                 }
 
                 show(page.dataset.language);
