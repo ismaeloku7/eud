@@ -103,6 +103,21 @@ footer p {
     margin-right: 0.3rem;
 }
 
+/* Language selector and social icons: centred on the same line, with a gap between them. */
+.header-icon {
+    margin-left: 1rem;
+}
+
+.header-icon ul {
+    align-items: center;
+    margin: 0;
+}
+
+.header-icon ul li a,
+.header-icon .size-icon-header {
+    display: block;
+}
+
 .headline ul li {
     margin: 0;
 }
