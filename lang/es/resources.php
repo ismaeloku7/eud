@@ -25,5 +25,7 @@ return [
     'in_this_collection' => 'En esta colección',
     'you_may_also_like' => 'También te puede interesar…',
     'choose_language' => 'Idioma',
+    'choose_download_language' => 'Elige el idioma que quieres descargar',
+    'close' => 'Cerrar',
     'no_file_for_language' => 'No disponible en este idioma',
 ];
