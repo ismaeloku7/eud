@@ -73,6 +73,19 @@ class ResourcesTest extends TestCase
             ->assertSee('Pathfinder Manual');
     }
 
+    public function test_pagination_puts_previous_on_the_left_and_next_on_the_right(): void
+    {
+        foreach (range(1, 13) as $number) {
+            $this->resource("Manual {$number}", [$this->english]);
+        }
+
+        Livewire::test(Index::class)
+            ->assertSeeInOrder(['Previous', 'Next'])
+            ->call('nextPage')
+            ->assertSeeInOrder(['Previous', 'Next'])
+            ->assertSeeHtml('aria-current="page">2<');
+    }
+
     public function test_search_matches_title_and_author(): void
     {
         $this->resource('Pathfinder Manual', [$this->english], author: 'EUD Youth');

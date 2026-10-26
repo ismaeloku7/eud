@@ -6,7 +6,7 @@
     $firstFile = $resource->files->first();
 @endphp
 <div class="our-ressources text-primary">
-    <a class="relative image-section block" href="{{ $url }}">
+    <a class="relative image-section block aspect-square" href="{{ $url }}">
         <img src="{{ \App\Support\Media::url($resource->image, 'images/resources-placeholder.png') }}" alt="{{ $resource->title }}" loading="lazy">
         @if ($resource->collection)
             <div class="absolute highlighted">{{ __('resources.collection') }}</div>
