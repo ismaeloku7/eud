@@ -16,7 +16,7 @@ class Uploads
     public static function image(string $name, string $directory, ?string $label = null): FileUpload
     {
         return self::configure(FileUpload::make($name)->label($label ?? __('Image'))->image()->imageEditor(), $directory)
-            ->maxSize(5 * 1024);
+            ->maxSize(15 * 1024);
     }
 
     public static function document(string $name, string $directory, ?string $label = null): FileUpload
