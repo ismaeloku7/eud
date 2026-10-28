@@ -6,7 +6,14 @@ use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-/** Selects for BelongsTo / BelongsToMany whose related "name" is translatable. */
+/**
+ * Selects for BelongsTo / BelongsToMany whose related "name" is translatable.
+ *
+ * Searching is done in the browser over the translated labels: with no search
+ * columns Filament preloads every record instead of the first 50 and does not
+ * run a LIKE on the JSON column, which on MySQL is case-sensitive and never
+ * matches accented text because translations are stored escaped.
+ */
 class Relations
 {
     public static function select(string $field, string $relationship, string $label, string $titleAttribute = 'name'): Select
@@ -19,8 +26,9 @@ class Relations
                 fn (Builder $query): Builder => static::orderByTranslatedTitle($query, $titleAttribute),
             )
             ->getOptionLabelFromRecordUsing(fn (Model $record): string => (string) $record->{$titleAttribute})
-            ->searchable()
-            ->preload();
+            ->searchable([])
+            ->preload()
+            ->optionsLimit(500);
     }
 
     public static function multiple(string $relationship, string $label, string $titleAttribute = 'name'): Select

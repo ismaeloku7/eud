@@ -59,6 +59,19 @@ class FilesRelationManagerTest extends TestCase
         });
     }
 
+    public function test_every_language_is_offered_and_searched_by_its_translated_name(): void
+    {
+        $languages = collect(range(1, 60))->map(
+            fn (int $number) => Language::create(['code' => "l{$number}", 'name' => ['en' => sprintf('Language %02d', $number)]]),
+        );
+        $resource = Resource::create(['slug' => 'manual', 'title' => ['en' => 'Manual']]);
+
+        $this->languageSelect($resource, function (Select $select) use ($languages): void {
+            $this->assertSame($languages->pluck('id')->all(), array_keys($select->getOptions()));
+            $this->assertFalse($select->hasDynamicSearchResults());
+        });
+    }
+
     /** Opens the "add file" modal of a resource and hands its language select to the callback. */
     private function languageSelect(Resource $resource, \Closure $assert): void
     {
