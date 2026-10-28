@@ -178,6 +178,27 @@ class EventsTest extends TestCase
         $this->assertTrue($previous->speakers()->whereKey($speaker->id)->exists(), 'the previous event keeps it');
     }
 
+    public function test_main_speaker_is_set_per_event(): void
+    {
+        $previous = $this->makeEvent();
+        $speaker = Speaker::create(['name' => ['en' => 'Ana García']]);
+        $other = Speaker::create(['name' => ['en' => 'Luis Pérez']]);
+        $previous->speakers()->attach($speaker);
+        $event = Event::create(['title' => ['en' => 'Congress 2027'], 'slug' => ['en' => 'congress-2027'], 'date_start' => '2027-07-01', 'date_end' => '2027-07-05']);
+        $event->speakers()->attach($other);
+
+        $manager = Livewire::test(SpeakersRelationManager::class, ['ownerRecord' => $event, 'pageClass' => EditEvent::class])
+            ->callAction(TestAction::make('attach')->table(), data: ['recordId' => [$speaker->id], 'main' => true])
+            ->assertHasNoActionErrors();
+
+        $this->assertSame(['Ana García'], $event->fresh()->mainSpeakers()->map(fn (Speaker $s): string => $s->name)->all());
+
+        $manager->call('updateTableColumnState', 'main', (string) $other->id, true);
+
+        $this->assertSame(['Ana García', 'Luis Pérez'], $event->fresh()->mainSpeakers()->map(fn (Speaker $s): string => $s->name)->sort()->values()->all());
+        $this->assertTrue($previous->fresh()->mainSpeakers()->isEmpty(), 'the flag belongs to each event');
+    }
+
     public function test_time_slots_and_tracks_are_created_inside_the_event(): void
     {
         $event = $this->makeEvent();

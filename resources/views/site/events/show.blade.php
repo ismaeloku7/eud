@@ -53,10 +53,11 @@
                             </h2>
                             <span class="block text-xl font-black text-medium_blue">{{ __('events.date') }}</span>
                         </div>
-                        @if ($event->speakers->isNotEmpty())
+                        @php($mainSpeakers = $event->mainSpeakers())
+                        @if ($mainSpeakers->isNotEmpty())
                             <div class="mb-16 desktop_large:mb-11 mobile:mb-8">
                                 <h2 class="mb-0 text-4xl mobile:text-5xl text-medium_blue">
-                                    <strong>{{ $event->speakers->map(fn ($speaker) => $speaker->name)->join(', ') }}</strong>
+                                    <strong>{{ $mainSpeakers->map(fn ($speaker) => $speaker->name)->join(', ') }}</strong>
                                 </h2>
                                 <span class="block text-xl font-black text-medium_blue">{{ __('events.main_speakers') }}</span>
                             </div>
