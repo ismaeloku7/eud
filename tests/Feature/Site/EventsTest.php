@@ -78,6 +78,21 @@ class EventsTest extends TestCase
             ->assertSee('Keynote speaker');
     }
 
+    public function test_location_tab_shows_the_photos_with_their_captions(): void
+    {
+        $event = $this->makeEvent('Youth Congress');
+        $event->update(['location_images' => [
+            ['image' => 'events/location/rooms.jpg', 'caption' => ['en' => 'Double rooms']],
+            ['image' => 'events/location/map.png', 'caption' => null],
+        ]]);
+
+        Livewire::test(Detail::class, ['event' => $event->fresh(), 'tab' => 'location'])
+            ->assertSeeHtml('data-lightbox')
+            ->assertSee('events/location/rooms.jpg')
+            ->assertSee('events/location/map.png')
+            ->assertSee('Double rooms');
+    }
+
     public function test_unpublished_event_is_not_found(): void
     {
         $this->makeEvent('Secret draft', publish: false);

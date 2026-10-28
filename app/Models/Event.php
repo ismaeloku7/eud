@@ -19,7 +19,7 @@ class Event extends Model implements HasMedia
         'slug', 'title', 'subtitle', 'description', 'type', 'slogan', 'quote', 'tags',
         'date_start', 'date_end', 'publish',
         'photo_portada', 'facebook_banner', 'image_about', 'url_youtube', 'url_video', 'playlist_video', 'url_gallery',
-        'location', 'lat', 'long', 'location_url', 'location_description', 'location_recursive',
+        'location', 'lat', 'long', 'location_url', 'location_description', 'location_recursive', 'location_images',
         'registration', 'registration_eud', 'registration_non_eud', 'registration_recursive',
         'about_tab', 'speaker_tab', 'speaker_title', 'workshop_tab', 'workshop_title', 'workshop_description',
         'location_tab', 'location_title', 'program_tab', 'program_title', 'program_subtitle', 'program_description',
@@ -43,6 +43,7 @@ class Event extends Model implements HasMedia
             'publish' => 'boolean',
             'registration' => 'boolean',
             'location_recursive' => 'array',
+            'location_images' => 'array',
             'registration_recursive' => 'array',
         ];
     }

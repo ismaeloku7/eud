@@ -286,5 +286,8 @@
     "Remove from event": "Quitar del evento",
     "Speakers are added in the \"Speakers\" tab above, where you can also pick speakers from previous events.": "Los ponentes se añaden en la pestaña «Ponentes» de arriba, donde también puedes elegir ponentes de eventos anteriores.",
     "Time slots are created in the \"Time slots\" tab of this event.": "Las franjas se crean en la pestaña «Franjas horarias» de este evento.",
-    "Tracks are created in the \"Workshop tracks\" tab of this event.": "Las líneas se crean en la pestaña «Líneas de talleres» de este evento."
+    "Tracks are created in the \"Workshop tracks\" tab of this event.": "Las líneas se crean en la pestaña «Líneas de talleres» de este evento.",
+    "Photos": "Fotos",
+    "Caption": "Pie de foto",
+    "Rooms, maps, how to get there… Shown in a grid; a click opens the photo full size.": "Habitaciones, mapas, cómo llegar… Se muestran en cuadrícula; al pulsar una se abre en grande."
 }
