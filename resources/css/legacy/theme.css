@@ -14,17 +14,6 @@ a:hover {
     outline: none;
 }
 
-p {
-    margin-bottom: 2.25rem;
-    --tw-text-opacity: 1;
-    color: rgba(74, 67, 73, var(--tw-text-opacity));
-    line-height: 26px;
-}
-
-p:last-child {
-    margin-bottom: 0px;
-}
-
 .flex-basis {
     flex-basis: min-content;
 }
@@ -2682,35 +2671,6 @@ iframe {
 }
 
 @media (max-width:767px) {
-    h1 {
-        font-size: 2.5rem;
-        line-height: 50px;
-    }
-
-    h5 {
-        font-size: 1.125rem;
-        line-height: 1.75rem;
-        letter-spacing: 2px;
-    }
-
-    h3 {
-        font-size: 1.5rem;
-        line-height: 2rem;
-    }
-
-    h6 {
-        font-size: 1rem;
-        line-height: 1.5rem;
-    }
-
-    p {
-        margin-bottom: 1.5rem;
-    }
-
-    p br {
-        display: none;
-    }
-
     .our-advantage h5 {
         font-size: 1rem;
         line-height: 1.5rem;
@@ -2734,11 +2694,6 @@ iframe {
 
     .our-ressources.slick-slide.slick-current h5 {
         margin-left: 0;
-    }
-
-    h2 {
-        font-size: 1.875rem;
-        line-height: 2.25rem;
     }
 
     .banner h1 {
