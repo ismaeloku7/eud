@@ -265,6 +265,7 @@
     "next": "Siguiente",
     "pagination.previous": "Anterior",
     "pagination.next": "Siguiente",
+    "Showing :first to :last of :total results": "Mostrando :first a :last de :total resultados",
     "home": "Inicio",
     "contact": "Contacto",
     "choose country": "Elige un país",

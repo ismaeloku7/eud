@@ -73,16 +73,16 @@ class ResourcesTest extends TestCase
             ->assertSee('Pathfinder Manual');
     }
 
-    public function test_pagination_puts_previous_on_the_left_and_next_on_the_right(): void
+    public function test_pagination_shows_the_result_count_then_previous_and_next(): void
     {
         foreach (range(1, 13) as $number) {
             $this->resource("Manual {$number}", [$this->english]);
         }
 
         Livewire::test(Index::class)
-            ->assertSeeInOrder(['Previous', 'Next'])
+            ->assertSeeInOrder(['Showing 1 to 12 of 13 results', 'Previous', 'Next'])
             ->call('nextPage')
-            ->assertSeeInOrder(['Previous', 'Next'])
+            ->assertSeeInOrder(['Showing 13 to 13 of 13 results', 'Previous', 'Next'])
             ->assertSeeHtml('aria-current="page">2<');
     }
 

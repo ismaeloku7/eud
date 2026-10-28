@@ -22,6 +22,7 @@
     "next": "Next",
     "pagination.previous": "Previous",
     "pagination.next": "Next",
+    "Showing :first to :last of :total results": "Showing :first to :last of :total results",
     "home": "Home",
     "contact": "Contact",
     "choose country": "Choose a Country",
