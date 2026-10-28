@@ -6,7 +6,7 @@
                 <a class="w-1/6 tablet:w-1/3 mobile:w-1/2 tablet:mb-6 cursor-pointer hover:opacity-60 no-underline"
                     href="{{ route('ministries.show', ['slug' => $ministry->slug]) }}">
                     <img src="{{ $site->logo($ministry) }}" alt="{{ $ministry->name }}">
-                    <strong>{{ $site->menuName($ministry) }}</strong>
+                    <strong>{{ Str::upper($ministry->name) }}</strong>
                 </a>
             @endforeach
         </div>
