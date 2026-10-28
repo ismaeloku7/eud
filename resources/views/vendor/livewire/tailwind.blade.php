@@ -1,4 +1,4 @@
-{{-- Site pagination for every Livewire listing: previous on the left, page numbers in the middle, next on the right. --}}
+{{-- Site pagination for every Livewire listing: the result count on the left; previous, page numbers and next on the right. --}}
 @php
     if (! isset($scrollTo)) {
         $scrollTo = 'body';
@@ -14,6 +14,9 @@
 
 <div>
     @if ($paginator->hasPages())
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <p class="text-sm text-gray-500">{{ __('Showing :first to :last of :total results', ['first' => $paginator->firstItem(), 'last' => $paginator->lastItem(), 'total' => $paginator->total()]) }}</p>
+
         <nav role="navigation" aria-label="{{ __('pagination.navigation') }}" class="flex items-center justify-between gap-4">
             <div class="flex-1 flex justify-start">
                 @if ($paginator->onFirstPage())
@@ -53,5 +56,6 @@
                 @endif
             </div>
         </nav>
+        </div>
     @endif
 </div>
