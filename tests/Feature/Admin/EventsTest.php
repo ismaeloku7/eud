@@ -108,6 +108,24 @@ class EventsTest extends TestCase
         Storage::disk('public')->assertExists($photos[0]['image']);
     }
 
+    public function test_programme_image_and_pdf_are_uploaded(): void
+    {
+        Storage::fake('public');
+        $event = $this->makeEvent();
+
+        Livewire::test(EditEvent::class, ['record' => $event->getRouteKey()])
+            ->fillForm([
+                'program_image' => UploadedFile::fake()->image('programme.jpg'),
+                'program_download' => UploadedFile::fake()->create('programme.pdf', 500, 'application/pdf'),
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $event->refresh();
+        Storage::disk('public')->assertExists($event->program_image);
+        Storage::disk('public')->assertExists($event->program_download);
+    }
+
     public function test_spanish_translation_is_saved_without_touching_english(): void
     {
         $event = $this->makeEvent();

@@ -122,7 +122,7 @@ class Detail extends Component
             unset($tabs['main_session']);
         }
 
-        if ($event->programs->isEmpty()) {
+        if ($event->programs->isEmpty() && blank($event->program_image) && blank($event->program_download)) {
             unset($tabs['program']);
         }
 

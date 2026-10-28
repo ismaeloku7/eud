@@ -289,5 +289,7 @@
     "Tracks are created in the \"Workshop tracks\" tab of this event.": "Las líneas se crean en la pestaña «Líneas de talleres» de este evento.",
     "Photos": "Fotos",
     "Caption": "Pie de foto",
-    "Rooms, maps, how to get there… Shown in a grid; a click opens the photo full size.": "Habitaciones, mapas, cómo llegar… Se muestran en cuadrícula; al pulsar una se abre en grande."
+    "Rooms, maps, how to get there… Shown in a grid; a click opens the photo full size.": "Habitaciones, mapas, cómo llegar… Se muestran en cuadrícula; al pulsar una se abre en grande.",
+    "Shown in the Programme tab; a click opens it full size.": "Se muestra en la pestaña Programa; al pulsarla se abre en grande.",
+    "Shown in the Programme tab as a \"Download the programme\" button.": "Se muestra en la pestaña Programa como botón «Descargar el programa»."
 }
