@@ -27,6 +27,30 @@ final class ImportLog
         cache()->forget('legacy:pending-files');
     }
 
+    /**
+     * Records a later partial import whose uploads are still on the previous
+     * site: they join the files already pending, which stay in the list.
+     *
+     * @param  array<int, string>  $files
+     */
+    public static function recordQueued(string $source, array $files, int $warnings): void
+    {
+        $latest = self::latest();
+        $pending = array_values(array_unique([...self::pending(), ...$files]));
+
+        DB::table('legacy_imports')->insert([
+            'source' => $source,
+            'files_copied' => $latest->files_copied ?? 0,
+            'files_missing' => count($pending),
+            'warnings' => $warnings,
+            'missing' => json_encode($pending, JSON_UNESCAPED_SLASHES),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        cache()->forget('legacy:pending-files');
+    }
+
     /** @return object{id: int, files_copied: int, files_missing: int, missing: ?string}|null */
     public static function latest(): ?object
     {

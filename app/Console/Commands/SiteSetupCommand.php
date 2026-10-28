@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\File;
  *
  * - First deploy with the bundled legacy dump: imports the previous site once.
  * - First deploy without it: seeds catalogues and ministries.
+ * - Once: applies the eudyouth.org resources export (new resources, download counters).
  * - Always: makes sure the fixed pages and the first admin user exist.
  */
 class SiteSetupCommand extends Command
@@ -37,6 +38,10 @@ class SiteSetupCommand extends Command
             $this->info('Empty database: seeding catalogues and ministries.');
             $this->callSilently('db:seed', ['--class' => CatalogueSeeder::class, '--force' => true]);
             $this->callSilently('db:seed', ['--class' => MinistrySeeder::class, '--force' => true]);
+        }
+
+        if (config('site.legacy.resources_export')) {
+            $this->call('legacy:sync-resources', ['--once' => true]);
         }
 
         $this->callSilently('db:seed', ['--class' => PageSeeder::class, '--force' => true]);

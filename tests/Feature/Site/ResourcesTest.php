@@ -86,6 +86,16 @@ class ResourcesTest extends TestCase
             ->assertSeeHtml('aria-current="page">2<');
     }
 
+    public function test_listing_is_alphabetical_ignoring_case(): void
+    {
+        foreach (['Zebra Notes', 'bibleproject.com', 'Apple Guide', 'iCOR Study Guide'] as $title) {
+            $this->resource($title, [$this->english]);
+        }
+
+        Livewire::test(Index::class)->assertSeeInOrder(['Apple Guide', 'bibleproject.com', 'iCOR Study Guide', 'Zebra Notes']);
+        Livewire::test(Index::class)->set('sort', 'desc')->assertSeeInOrder(['Zebra Notes', 'iCOR Study Guide', 'bibleproject.com', 'Apple Guide']);
+    }
+
     public function test_search_matches_title_and_author(): void
     {
         $this->resource('Pathfinder Manual', [$this->english], author: 'EUD Youth');
