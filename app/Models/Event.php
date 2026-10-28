@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
@@ -91,7 +92,17 @@ class Event extends Model implements HasMedia
 
     public function speakers(): BelongsToMany
     {
-        return $this->belongsToMany(Speaker::class, 'events_speakers');
+        return $this->belongsToMany(Speaker::class, 'events_speakers')->withPivot('main');
+    }
+
+    /**
+     * Main speakers of the loaded speakers, shown in the event intro.
+     *
+     * @return Collection<int, Speaker>
+     */
+    public function mainSpeakers(): Collection
+    {
+        return $this->speakers->filter(fn (Speaker $speaker): bool => (bool) $speaker->pivot->main)->values();
     }
 
     public function scopePublished(Builder $query): Builder

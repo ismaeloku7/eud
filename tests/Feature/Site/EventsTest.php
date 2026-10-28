@@ -124,6 +124,18 @@ class EventsTest extends TestCase
             ->assertDontSee(__('events.schedule'));
     }
 
+    public function test_intro_lists_only_the_main_speakers(): void
+    {
+        $event = $this->makeEvent('Youth Congress');
+        $event->speakers()->attach(Speaker::create(['name' => ['en' => 'Ana García']]), ['main' => true]);
+        $event->speakers()->attach(Speaker::create(['name' => ['en' => 'Workshop Leader']]), ['main' => false]);
+
+        $this->get('/events/youth-congress')
+            ->assertOk()
+            ->assertSeeInOrder([__('events.date'), 'Ana García', __('events.main_speakers')])
+            ->assertDontSeeText('Ana García, Workshop Leader');
+    }
+
     public function test_unpublished_event_is_not_found(): void
     {
         $this->makeEvent('Secret draft', publish: false);
@@ -198,7 +210,7 @@ class EventsTest extends TestCase
         $event->update(['registration' => true]);
 
         $speaker = Speaker::create(['name' => ['en' => 'Ana García'], 'type' => ['en' => 'Keynote speaker'], 'description' => ['en' => '<p>Bio of Ana.</p>']]);
-        $event->speakers()->attach($speaker);
+        $event->speakers()->attach($speaker, ['main' => true]);
 
         $plenary = Program::create(['event_id' => $event->id, 'title' => ['en' => 'Opening plenary'], 'date_start' => '2026-07-02 10:00', 'date_end' => '2026-07-02 11:30', 'main_session' => true]);
         $plenary->speakers()->attach($speaker);

@@ -13,9 +13,11 @@ use Filament\Actions\DetachBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use LaraZeus\SpatieTranslatable\Resources\RelationManagers\Concerns\Translatable;
@@ -50,6 +52,7 @@ class SpeakersRelationManager extends RelationManager
                 TextInput::make('type')->label(__('Role'))->maxLength(255)->helperText(__('E.g. "Keynote speaker", "Workshop leader".')),
                 Textarea::make('description')->label(__('Biography'))->rows(4)->columnSpanFull(),
                 Uploads::image('photo', 'speakers', __('Photo'))->avatar()->imageEditor(false),
+                self::mainToggle(),
             ]);
     }
 
@@ -62,6 +65,7 @@ class SpeakersRelationManager extends RelationManager
                 Thumbnail::make('photo')->circular(),
                 TextColumn::make('name')->label(__('Name'))->searchable()->sortable(),
                 TextColumn::make('type')->label(__('Role'))->toggleable(),
+                ToggleColumn::make('main')->label(__('Main speaker')),
                 TextColumn::make('events.title')->label(__('Events'))->badge()->color('gray')->toggleable(),
             ])
             ->headerActions([
@@ -72,7 +76,8 @@ class SpeakersRelationManager extends RelationManager
                     ->preloadRecordSelect()
                     ->multiple()
                     ->recordSelectSearchColumns(['name', 'type'])
-                    ->recordTitle(fn (Speaker $record): string => self::describe($record)),
+                    ->recordTitle(fn (Speaker $record): string => self::describe($record))
+                    ->schema(fn (AttachAction $action): array => [$action->getRecordSelect(), self::mainToggle()]),
                 CreateAction::make()->label(__('New speaker')),
             ])
             ->recordActions([
@@ -84,6 +89,15 @@ class SpeakersRelationManager extends RelationManager
                     DetachBulkAction::make()->label(__('Remove from event')),
                 ]),
             ]);
+    }
+
+    /** Per event: the same speaker can be a main speaker in one event and not in another. */
+    private static function mainToggle(): Toggle
+    {
+        return Toggle::make('main')
+            ->label(__('Main speaker'))
+            ->helperText(__('Main speakers are shown in the event intro, next to the dates.'))
+            ->columnSpanFull();
     }
 
     /** "Name · role · events" so a speaker can be recognised when picking from previous years. */
