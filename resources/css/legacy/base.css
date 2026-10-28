@@ -1,0 +1,170 @@
+/*
+ * Base typography of the previous site (old style.css lines 603-720): body
+ * size and weight, heading sizes, strong weight and list/paragraph spacing.
+ * Imported in the base layer so utility classes still override it, as before.
+ */
+*,
+::before,
+::after {
+    --tw-border-opacity: 1;
+    border-color: rgba(229, 231, 235, var(--tw-border-opacity));
+}
+
+body {
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
+    font-family: "Red Hat Display";
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+    --tw-text-opacity: 1;
+    color: rgba(110, 110, 110, var(--tw-text-opacity));
+}
+body{
+    font-size: 18px;
+}
+body.no-scroll {
+    overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 0px;
+    margin-bottom: 0.75rem;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+ul li {
+    margin-bottom: 0.75rem;
+}
+
+ul {
+    list-style: disc;
+    padding-left: 1rem;
+}
+
+ol {
+    counter-reset: my-awesome-counter;
+    list-style: none;
+    padding-left: 0px;
+}
+
+ol>li {
+    position: relative;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+    counter-increment: my-awesome-counter;
+}
+
+ol>li::before {
+    content: counter(my-awesome-counter);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-weight: 900;
+    --tw-text-opacity: 1;
+    color: rgba(69, 205, 252, var(--tw-text-opacity));
+}
+
+h1 strong,
+h2 strong,
+h3 strong,
+h4 strong,
+h5 strong,
+strong {
+    font-weight: 900;
+}
+
+h6 strong {
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 3.125rem;
+    line-height: 60px;
+}
+
+h2 {
+    font-size: 2.5rem;
+    line-height: 50px;
+}
+
+h3 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    line-height: 32px;
+}
+
+h4 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 900;
+    --tw-text-opacity: 1;
+    color: rgba(63, 178, 207, var(--tw-text-opacity));
+    letter-spacing: 4px;
+}
+
+h6 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+}
+
+/* Element rules of the previous theme, kept with the base so utilities override them as on the old site. */
+p {
+    margin-bottom: 2.25rem;
+    --tw-text-opacity: 1;
+    color: rgba(74, 67, 73, var(--tw-text-opacity));
+    line-height: 26px;
+}
+
+p:last-child {
+    margin-bottom: 0px;
+}
+
+@media (max-width:767px) {
+    h1 {
+        font-size: 2.5rem;
+        line-height: 50px;
+    }
+
+    h5 {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        letter-spacing: 2px;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+
+    h6 {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    p {
+        margin-bottom: 1.5rem;
+    }
+
+    p br {
+        display: none;
+    }
+
+    h2 {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+    }
+}
