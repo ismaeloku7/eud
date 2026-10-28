@@ -93,6 +93,22 @@ class EventsTest extends TestCase
             ->assertSee('Double rooms');
     }
 
+    public function test_programme_lists_every_day_and_names_the_selected_one(): void
+    {
+        $event = $this->makeEvent('Trekking Camp');
+        foreach (['2026-07-01 09:00', '2026-07-02 09:00', '2026-07-03 09:00', '2026-07-04 09:00', '2026-07-05 09:00', '2026-07-06 09:00'] as $start) {
+            Program::create(['event_id' => $event->id, 'title' => ['en' => "Hike {$start}"], 'date_start' => $start, 'date_end' => str_replace('09:00', '12:00', $start)]);
+        }
+
+        Livewire::test(Detail::class, ['event' => $event->fresh(), 'tab' => 'program'])
+            ->assertSeeInOrder(['Wed 1 Jul', 'Thu 2 Jul', 'Fri 3 Jul', 'Sat 4 Jul', 'Sun 5 Jul', 'Mon 6 Jul'])
+            ->assertSee('Wednesday, July 1, 2026')
+            ->call('selectProgramDay', '2026-07-06')
+            ->assertSee('Monday, July 6, 2026')
+            ->assertSee('Hike 2026-07-06 09:00')
+            ->assertDontSee('Hike 2026-07-01 09:00');
+    }
+
     public function test_unpublished_event_is_not_found(): void
     {
         $this->makeEvent('Secret draft', publish: false);

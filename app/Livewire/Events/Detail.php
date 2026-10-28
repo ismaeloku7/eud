@@ -8,6 +8,7 @@ use App\Models\Speaker;
 use App\Models\Workshop;
 use Carbon\CarbonInterface;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
@@ -61,23 +62,12 @@ class Detail extends Component
         }
     }
 
-    public function shiftProgramDay(int $offset): void
-    {
-        $this->programDay = $this->shift($this->programDays()->keys(), $this->programDay, $offset);
-    }
-
     public function selectWorkshopGroup(string $group): void
     {
         if ($this->workshopGroups()->has($group)) {
             $this->workshopGroup = $group;
             $this->workshopLine = '';
         }
-    }
-
-    public function shiftWorkshopGroup(int $offset): void
-    {
-        $this->workshopGroup = $this->shift($this->workshopGroups()->keys(), $this->workshopGroup, $offset);
-        $this->workshopLine = '';
     }
 
     public function openSpeaker(int $speakerId): void
@@ -174,6 +164,17 @@ class Detail extends Component
         return $this->event->programs
             ->sortBy('date_start')
             ->mapWithKeys(fn (Program $program) => [$program->date_start->format('Y-m-d') => $this->dayLabel($program->date_start)]);
+    }
+
+    /** Full date of the selected programme day, e.g. "Wednesday, February 6, 2019". */
+    #[Computed]
+    public function programDayTitle(): string
+    {
+        if (! $this->programDays()->has($this->programDay)) {
+            return '';
+        }
+
+        return Str::ucfirst(Carbon::parse($this->programDay)->locale(app()->getLocale())->isoFormat('dddd, LL'));
     }
 
     #[Computed]
@@ -275,19 +276,6 @@ class Detail extends Component
 
     private function dayLabel(CarbonInterface $date): string
     {
-        return Str::title($date->locale(app()->getLocale())->isoFormat('ddd. MMM D'));
-    }
-
-    /** @param  Collection<int, string>  $keys */
-    private function shift(Collection $keys, string $current, int $offset): string
-    {
-        $keys = $keys->values();
-        $index = $keys->search($current);
-
-        if ($index === false || $keys->isEmpty()) {
-            return (string) ($keys->first() ?? '');
-        }
-
-        return (string) $keys->get(max(0, min($keys->count() - 1, $index + $offset)), $current);
+        return Str::title($date->locale(app()->getLocale())->isoFormat('ddd D MMM'));
     }
 }

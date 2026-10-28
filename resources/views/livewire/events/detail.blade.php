@@ -142,12 +142,11 @@
             .scroll-modal ::-webkit-scrollbar { width: 5px; }
             .scroll-modal ::-webkit-scrollbar-track { box-shadow: inset 0 0 5px grey; border-radius: 10px; }
             .scroll-modal ::-webkit-scrollbar-thumb { background: rgba(69, 205, 252); border-radius: 10px; }
-            .day-switcher { display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; }
-            .day-switcher .days { display: flex; gap: 0.25rem; overflow-x: auto; scrollbar-width: none; }
-            .day-switcher .days::-webkit-scrollbar { display: none; }
-            .day-switcher .days button { white-space: nowrap; padding: 0.5rem 1rem; background: none; border: 0; border-right: 2px solid #45CDFC; }
-            .day-switcher .days button:last-child { border-right: 0; }
-            .day-switcher .arrow { background: none; border: 0; cursor: pointer; }
+            .day-switcher { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.5rem; }
+            .day-switcher--start { justify-content: flex-start; }
+            .day-switcher button { white-space: nowrap; padding: 0.35rem 1.1rem; background: #fff; border: 2px solid #45CDFC; border-radius: 9999px; cursor: pointer; transition: background-color 150ms; }
+            .day-switcher button:hover { background: #e8f8fe; }
+            .day-switcher button.is-selected { background: #45CDFC; }
             @media (max-width: 767.9px) { .day-switcher { justify-content: center; } }
         </style>
     @endpush

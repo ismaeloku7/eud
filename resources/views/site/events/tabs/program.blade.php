@@ -12,17 +12,16 @@
         </div>
     </div>
 
-    <div class="flex flex-wrap">
-        <div class="w-1/2 mobile:w-full mobile:text-center mobile:pb-6">
-            <h3 class="theme-color-title fw-bold">{{ __('events.schedule') }}</h3>
-        </div>
-        <div class="w-1/2 mobile:w-full">
-            @include('site.events.tabs.partials.day-switcher', ['items' => $days, 'selected' => $programDay, 'select' => 'selectProgramDay', 'shift' => 'shiftProgramDay'])
-        </div>
+    <div class="mobile:text-center">
+        <h3 class="theme-color-title fw-bold mb-6">{{ __('events.schedule') }}</h3>
+        @include('site.events.tabs.partials.day-switcher', ['items' => $days, 'selected' => $programDay, 'select' => 'selectProgramDay', 'align' => 'start'])
     </div>
 
-    <div class="flex flex-wrap mt-20 py-4">
+    <div class="flex flex-wrap mt-12 py-4">
         <div class="w-full">
+            @if ($this->programDayTitle)
+                <h4 class="theme-color-title fw-bold mb-2 mobile:text-center">{{ $this->programDayTitle }}</h4>
+            @endif
             @foreach ($this->programsOfDay as $program)
                 <div class="py-8 flex" style="border-bottom: solid 1px whitesmoke;" wire:key="program-{{ $program->id }}">
                     <div class="text-medium_blue block text-xl fw-bold mobile:fs-16 pr-4 tablet:pr-0" style="max-width: 240px; width: 100%; {{ $program->color ? 'border-left: 4px solid '.$program->color.'; padding-left: 1rem;' : '' }}">
