@@ -10,6 +10,7 @@ use App\Models\Language;
 use App\Models\Resource;
 use App\Models\User;
 use Database\Seeders\CatalogueSeeder;
+use Filament\Actions\Testing\TestAction;
 use Filament\Forms\Components\Select;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -98,10 +99,12 @@ class RelationSelectsTest extends TestCase
         $livewire = Livewire::test(FilesRelationManager::class, [
             'ownerRecord' => $resource,
             'pageClass' => EditResource::class,
-        ])->mountAction('create');
+        ])->mountAction(TestAction::make('create')->table());
+
+        $relationManager = $livewire->instance();
 
         /** @var Select $select */
-        $select = $livewire->instance()->getSchemaComponent('mountedActionSchema0.language_id');
+        $select = $relationManager->{$relationManager->getMountedActionSchemaName()}->getFlatComponents(withHidden: true)['language_id'];
 
         return $select;
     }
