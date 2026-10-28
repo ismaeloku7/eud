@@ -98,8 +98,11 @@ class EventForm
                                 TextInput::make('main_session_tab')->label(__('Main session tab label'))->maxLength(100)->placeholder('Main session'),
                                 TextInput::make('main_session_title')->label(__('Main session title'))->maxLength(255),
                                 RichEditor::make('program_description')->label(__('Description'))->toolbarButtons($toolbar)->columnSpanFull(),
-                                Uploads::image('program_image', 'events', __('Programme image')),
-                                Uploads::document('program_download', 'events/files', __('Programme PDF')),
+                                Uploads::image('program_image', 'events', __('Programme image'))
+                                    ->helperText(__('Shown in the Programme tab; a click opens it full size.')),
+                                Uploads::document('program_download', 'events/files', __('Programme PDF'))
+                                    ->acceptedFileTypes(['application/pdf'])
+                                    ->helperText(__('Shown in the Programme tab as a "Download the programme" button.')),
                             ]),
                         ]),
                         Tab::make('workshops')->label(__('Workshops'))->schema([

@@ -76,18 +76,4 @@
             </div>
         @endforeach
     </div>
-
-    @if ($event->program_download || $event->program_image)
-        <div class="flex flex-wrap custom-workshops mt-20">
-            <div class="w-full text-center">
-                <a class="text-medium_blue inline-block" target="_blank" rel="noopener" href="{{ \App\Support\Media::url($event->program_download) ?? \App\Support\Media::url($event->program_image) }}" style="padding-left: 3.5rem; padding-right: 3.5rem;">
-                    @if ($event->program_image)
-                        <img src="{{ \App\Support\Media::url($event->program_image) }}" alt="" style="width: 100%; height: 100%; margin: 0 auto; object-fit: contain;">
-                    @else
-                        {{ __('events.programme_pdf') }}
-                    @endif
-                </a>
-            </div>
-        </div>
-    @endif
 </div>

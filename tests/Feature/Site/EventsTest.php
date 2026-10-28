@@ -109,6 +109,21 @@ class EventsTest extends TestCase
             ->assertDontSee('Hike 2026-07-01 09:00');
     }
 
+    public function test_programme_tab_shows_the_programme_image_and_pdf_without_sessions(): void
+    {
+        $event = $this->makeEvent('Trekking Camp');
+        $event->update(['program_image' => 'events/programme.jpg', 'program_download' => 'events/files/programme.pdf']);
+
+        $component = Livewire::test(Detail::class, ['event' => $event->fresh(), 'tab' => 'program']);
+
+        $this->assertSame('program', $component->get('tab'));
+        $component
+            ->assertSee('events/programme.jpg')
+            ->assertSee('events/files/programme.pdf')
+            ->assertSee(__('events.programme_pdf'))
+            ->assertDontSee(__('events.schedule'));
+    }
+
     public function test_unpublished_event_is_not_found(): void
     {
         $this->makeEvent('Secret draft', publish: false);
