@@ -16,6 +16,8 @@ use App\Models\Speaker;
 use App\Models\User;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -72,6 +74,19 @@ class EventsTest extends TestCase
             ])
             ->call('create')
             ->assertHasFormErrors(['date_end']);
+    }
+
+    public function test_a_poster_of_twelve_megabytes_can_be_uploaded(): void
+    {
+        Storage::fake('public');
+        $event = $this->makeEvent();
+
+        Livewire::test(EditEvent::class, ['record' => $event->getRouteKey()])
+            ->fillForm(['image_about' => UploadedFile::fake()->image('poster.jpg')->size(12 * 1024)])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        Storage::disk('public')->assertExists($event->refresh()->image_about);
     }
 
     public function test_spanish_translation_is_saved_without_touching_english(): void
