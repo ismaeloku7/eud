@@ -20,7 +20,7 @@
             @endif
         </div>
         <div class="w-1/2 mobile:w-full">
-            @include('site.events.tabs.partials.day-switcher', ['items' => $groups, 'selected' => $workshopGroup, 'select' => 'selectWorkshopGroup', 'shift' => 'shiftWorkshopGroup'])
+            @include('site.events.tabs.partials.day-switcher', ['items' => $groups, 'selected' => $workshopGroup, 'select' => 'selectWorkshopGroup'])
         </div>
     </div>
 
