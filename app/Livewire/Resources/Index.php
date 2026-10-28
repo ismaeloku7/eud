@@ -117,9 +117,23 @@ class Index extends Component
                 $this->sort === 'newest', fn (Builder $query) => $query->orderByDesc('created_at'),
                 fn (Builder $query) => $query
                     ->when($this->sort === 'oldest', fn (Builder $q) => $q->orderBy('created_at'))
-                    ->when($this->sort === 'desc', fn (Builder $q) => $q->orderByDesc('title->'.app()->getLocale()))
-                    ->when(! in_array($this->sort, ['oldest', 'desc'], true), fn (Builder $q) => $q->orderBy('title->'.app()->getLocale())),
+                    ->when(! in_array($this->sort, ['newest', 'oldest'], true), fn (Builder $q) => $this->orderByTitle($q, $this->sort === 'desc' ? 'desc' : 'asc')),
             );
+    }
+
+    /**
+     * Alphabetical by title in the current language (English when it has none),
+     * ignoring case so "bibleproject.com" sorts with the B's, as on the old site.
+     *
+     * @param  Builder<resource>  $query
+     */
+    private function orderByTitle(Builder $query, string $direction): void
+    {
+        $grammar = $query->getQuery()->getGrammar();
+        $fallback = $grammar->wrap('title->'.config('app.fallback_locale'));
+        $localized = $grammar->wrap('title->'.app()->getLocale());
+
+        $query->orderByRaw("lower(coalesce({$localized}, {$fallback})) {$direction}");
     }
 
     /**

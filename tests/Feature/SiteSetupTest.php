@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Console\Commands\SiteSetupCommand;
+use App\Legacy\ImportLog;
 use App\Models\Ministry;
 use App\Models\Page;
+use App\Models\Resource;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -69,6 +71,26 @@ class SiteSetupTest extends TestCase
         $this->assertSame(0, DB::table('legacy_imports')->count());
         $this->assertSame(6, Ministry::count());
         $this->assertTrue(Page::where('slug', 'ministry-amicus')->exists());
+    }
+
+    public function test_the_resources_export_is_applied_on_the_first_deploy_only(): void
+    {
+        File::delete($this->bundle);
+        $export = storage_path('framework/testing/resources-export.json');
+        File::ensureDirectoryExists(dirname($export));
+        File::put($export, json_encode(['resources' => [[
+            'slug' => 'new-guide', 'title' => 'New Guide', 'is_collection' => false, 'categories' => [], 'languages' => [],
+            'download_url' => 'https://eudyouth.org/storage/new-guide.pdf', 'translations' => [], 'collection_items' => [], 'downloads_eudyouth' => 12,
+        ]]]));
+        config()->set('site.legacy.resources_export', $export);
+
+        $this->artisan('site:setup')->assertSuccessful();
+        Resource::where('slug', 'new-guide')->update(['quantity' => 13]);
+        $this->artisan('site:setup')->assertSuccessful();
+
+        File::delete($export);
+        $this->assertSame(13, Resource::where('slug', 'new-guide')->value('quantity'), 'counters are copied once');
+        $this->assertSame(['new-guide.pdf'], ImportLog::pending());
     }
 
     private function bundleLegacyDatabase(): void

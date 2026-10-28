@@ -20,6 +20,8 @@ return [
     'legacy' => [
         'files_path' => env('LEGACY_FILES_PATH'),
         'files_url' => env('LEGACY_FILES_URL'),
+        // Export of eudyouth.org's resources, applied once by `site:setup` (empty to skip).
+        'resources_export' => env('LEGACY_RESOURCES_EXPORT', 'database/legacy/eudyouth-resources.json'),
     ],
 
     'ministries' => [
