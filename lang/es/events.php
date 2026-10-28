@@ -40,6 +40,4 @@ return [
     'programme_pdf' => 'Descargar el programa',
     'eud_participants' => 'Participantes de la EUD',
     'non_eud_participants' => 'Participantes de fuera de la EUD',
-    'previous' => 'Anterior',
-    'next' => 'Siguiente',
 ];

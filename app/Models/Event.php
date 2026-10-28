@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Translatable\HasTranslations;
@@ -19,7 +20,7 @@ class Event extends Model implements HasMedia
         'slug', 'title', 'subtitle', 'description', 'type', 'slogan', 'quote', 'tags',
         'date_start', 'date_end', 'publish',
         'photo_portada', 'facebook_banner', 'image_about', 'url_youtube', 'url_video', 'playlist_video', 'url_gallery',
-        'location', 'lat', 'long', 'location_url', 'location_description', 'location_recursive',
+        'location', 'lat', 'long', 'location_url', 'location_description', 'location_recursive', 'location_images',
         'registration', 'registration_eud', 'registration_non_eud', 'registration_recursive',
         'about_tab', 'speaker_tab', 'speaker_title', 'workshop_tab', 'workshop_title', 'workshop_description',
         'location_tab', 'location_title', 'program_tab', 'program_title', 'program_subtitle', 'program_description',
@@ -43,6 +44,7 @@ class Event extends Model implements HasMedia
             'publish' => 'boolean',
             'registration' => 'boolean',
             'location_recursive' => 'array',
+            'location_images' => 'array',
             'registration_recursive' => 'array',
         ];
     }
@@ -90,7 +92,17 @@ class Event extends Model implements HasMedia
 
     public function speakers(): BelongsToMany
     {
-        return $this->belongsToMany(Speaker::class, 'events_speakers');
+        return $this->belongsToMany(Speaker::class, 'events_speakers')->withPivot('main');
+    }
+
+    /**
+     * Main speakers of the loaded speakers, shown in the event intro.
+     *
+     * @return Collection<int, Speaker>
+     */
+    public function mainSpeakers(): Collection
+    {
+        return $this->speakers->filter(fn (Speaker $speaker): bool => (bool) $speaker->pivot->main)->values();
     }
 
     public function scopePublished(Builder $query): Builder

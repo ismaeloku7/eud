@@ -78,6 +78,64 @@ class EventsTest extends TestCase
             ->assertSee('Keynote speaker');
     }
 
+    public function test_location_tab_shows_the_photos_with_their_captions(): void
+    {
+        $event = $this->makeEvent('Youth Congress');
+        $event->update(['location_images' => [
+            ['image' => 'events/location/rooms.jpg', 'caption' => ['en' => 'Double rooms']],
+            ['image' => 'events/location/map.png', 'caption' => null],
+        ]]);
+
+        Livewire::test(Detail::class, ['event' => $event->fresh(), 'tab' => 'location'])
+            ->assertSeeHtml('data-lightbox')
+            ->assertSee('events/location/rooms.jpg')
+            ->assertSee('events/location/map.png')
+            ->assertSee('Double rooms');
+    }
+
+    public function test_programme_lists_every_day_and_names_the_selected_one(): void
+    {
+        $event = $this->makeEvent('Trekking Camp');
+        foreach (['2026-07-01 09:00', '2026-07-02 09:00', '2026-07-03 09:00', '2026-07-04 09:00', '2026-07-05 09:00', '2026-07-06 09:00'] as $start) {
+            Program::create(['event_id' => $event->id, 'title' => ['en' => "Hike {$start}"], 'date_start' => $start, 'date_end' => str_replace('09:00', '12:00', $start)]);
+        }
+
+        Livewire::test(Detail::class, ['event' => $event->fresh(), 'tab' => 'program'])
+            ->assertSeeInOrder(['Wed 1 Jul', 'Thu 2 Jul', 'Fri 3 Jul', 'Sat 4 Jul', 'Sun 5 Jul', 'Mon 6 Jul'])
+            ->assertSee('Wednesday, July 1, 2026')
+            ->call('selectProgramDay', '2026-07-06')
+            ->assertSee('Monday, July 6, 2026')
+            ->assertSee('Hike 2026-07-06 09:00')
+            ->assertDontSee('Hike 2026-07-01 09:00');
+    }
+
+    public function test_programme_tab_shows_the_programme_image_and_pdf_without_sessions(): void
+    {
+        $event = $this->makeEvent('Trekking Camp');
+        $event->update(['program_image' => 'events/programme.jpg', 'program_download' => 'events/files/programme.pdf']);
+
+        $component = Livewire::test(Detail::class, ['event' => $event->fresh(), 'tab' => 'program']);
+
+        $this->assertSame('program', $component->get('tab'));
+        $component
+            ->assertSee('events/programme.jpg')
+            ->assertSee('events/files/programme.pdf')
+            ->assertSee(__('events.programme_pdf'))
+            ->assertDontSee(__('events.schedule'));
+    }
+
+    public function test_intro_lists_only_the_main_speakers(): void
+    {
+        $event = $this->makeEvent('Youth Congress');
+        $event->speakers()->attach(Speaker::create(['name' => ['en' => 'Ana García']]), ['main' => true]);
+        $event->speakers()->attach(Speaker::create(['name' => ['en' => 'Workshop Leader']]), ['main' => false]);
+
+        $this->get('/events/youth-congress')
+            ->assertOk()
+            ->assertSeeInOrder([__('events.date'), 'Ana García', __('events.main_speakers')])
+            ->assertDontSeeText('Ana García, Workshop Leader');
+    }
+
     public function test_unpublished_event_is_not_found(): void
     {
         $this->makeEvent('Secret draft', publish: false);
@@ -152,7 +210,7 @@ class EventsTest extends TestCase
         $event->update(['registration' => true]);
 
         $speaker = Speaker::create(['name' => ['en' => 'Ana García'], 'type' => ['en' => 'Keynote speaker'], 'description' => ['en' => '<p>Bio of Ana.</p>']]);
-        $event->speakers()->attach($speaker);
+        $event->speakers()->attach($speaker, ['main' => true]);
 
         $plenary = Program::create(['event_id' => $event->id, 'title' => ['en' => 'Opening plenary'], 'date_start' => '2026-07-02 10:00', 'date_end' => '2026-07-02 11:30', 'main_session' => true]);
         $plenary->speakers()->attach($speaker);

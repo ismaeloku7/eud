@@ -3,16 +3,16 @@
 namespace App\Filament\Support\Forms;
 
 use Filament\Forms\Components\Select;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Selects for BelongsTo / BelongsToMany whose related "name" is translatable.
  *
- * Searching is done in the browser over the translated labels: with no search
- * columns Filament preloads every record instead of the first 50 and does not
- * run a LIKE on the JSON column, which on MySQL is case-sensitive and never
- * matches accented text because translations are stored escaped.
+ * The title attribute is a JSON column, so Filament's own option loading
+ * returns rows unsorted, capped at 50, and searches the raw JSON (where
+ * accents are escaped). Options are instead labelled in the current locale,
+ * then sorted and filtered in PHP, ignoring case and accents.
  */
 class Relations
 {
@@ -20,15 +20,12 @@ class Relations
     {
         return Select::make($field)
             ->label($label)
-            ->relationship(
-                $relationship,
-                $titleAttribute,
-                fn (Builder $query): Builder => static::orderByTranslatedTitle($query, $titleAttribute),
-            )
+            ->relationship($relationship, $titleAttribute)
             ->getOptionLabelFromRecordUsing(fn (Model $record): string => (string) $record->{$titleAttribute})
-            ->searchable([])
-            ->preload()
-            ->optionsLimit(500);
+            ->options(fn (Select $component): array => static::options($component))
+            ->getSearchResultsUsing(fn (Select $component, ?string $search): array => static::options($component, $search))
+            ->searchable()
+            ->preload();
     }
 
     public static function multiple(string $relationship, string $label, string $titleAttribute = 'name'): Select
@@ -37,18 +34,25 @@ class Relations
     }
 
     /**
-     * Alphabetical order by the title in the current locale. Rows without that
-     * translation are placed by their fallback-locale title, the same one the
-     * option label shows, instead of being listed first as empty values.
+     * Every related record as [key => label], alphabetically, optionally
+     * narrowed to the labels containing the search term.
+     *
+     * @return array<int|string, string>
      */
-    protected static function orderByTranslatedTitle(Builder $query, string $titleAttribute): Builder
+    public static function options(Select $component, ?string $search = null): array
     {
-        $grammar = $query->getQuery()->getGrammar();
-        $column = $query->qualifyColumn($titleAttribute);
+        $needle = static::normalize((string) $search);
 
-        $current = $grammar->wrap("{$column}->".app()->getLocale());
-        $fallback = $grammar->wrap("{$column}->".config('app.fallback_locale'));
+        return $component->getRelationship()->getRelated()->newQuery()->get()
+            ->mapWithKeys(fn (Model $record): array => [$record->getKey() => $component->getOptionLabelFromRecord($record)])
+            ->filter(fn (string $label): bool => $needle === '' || str_contains(static::normalize($label), $needle))
+            ->sortBy(fn (string $label): string => static::normalize($label))
+            ->all();
+    }
 
-        return $query->orderByRaw("coalesce({$current}, {$fallback})");
+    /** Lower-cased ASCII form of a label, so "Búlgaro" matches "bulgaro" and sorts with the B's. */
+    protected static function normalize(string $value): string
+    {
+        return Str::lower(Str::ascii(trim($value)));
     }
 }

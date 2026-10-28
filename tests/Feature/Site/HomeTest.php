@@ -28,6 +28,11 @@ class HomeTest extends TestCase
         $this->seed([MinistrySeeder::class, PageSeeder::class]);
     }
 
+    public function test_ministry_names_are_uppercase_on_the_home_page(): void
+    {
+        $this->get('/')->assertOk()->assertSeeInOrder(['PATHFINDERS', 'PATHFINDERS']);
+    }
+
     public function test_home_shows_page_texts_ministries_featured_resources_and_events(): void
     {
         Page::where('slug', 'home')->first()->update(['sections' => [

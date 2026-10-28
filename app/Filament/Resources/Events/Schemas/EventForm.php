@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Events\Schemas;
 use App\Filament\Support\Forms\TemplateSchema;
 use App\Filament\Support\Forms\Uploads;
 use App\Pages\Field;
+use App\Pages\Translate;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -96,8 +98,11 @@ class EventForm
                                 TextInput::make('main_session_tab')->label(__('Main session tab label'))->maxLength(100)->placeholder('Main session'),
                                 TextInput::make('main_session_title')->label(__('Main session title'))->maxLength(255),
                                 RichEditor::make('program_description')->label(__('Description'))->toolbarButtons($toolbar)->columnSpanFull(),
-                                Uploads::image('program_image', 'events', __('Programme image')),
-                                Uploads::document('program_download', 'events/files', __('Programme PDF')),
+                                Uploads::image('program_image', 'events', __('Programme image'))
+                                    ->helperText(__('Shown in the Programme tab; a click opens it full size.')),
+                                Uploads::document('program_download', 'events/files', __('Programme PDF'))
+                                    ->acceptedFileTypes(['application/pdf'])
+                                    ->helperText(__('Shown in the Programme tab as a "Download the programme" button.')),
                             ]),
                         ]),
                         Tab::make('workshops')->label(__('Workshops'))->schema([
@@ -123,6 +128,19 @@ class EventForm
                                         Field::number('column', __('Column'), __('1 = full width, 2 = half width.')),
                                     ]),
                                 ]),
+                                Repeater::make('location_images')
+                                    ->label(__('Photos'))
+                                    ->helperText(__('Rooms, maps, how to get there… Shown in a grid; a click opens the photo full size.'))
+                                    ->schema([
+                                        Uploads::image('image', 'events/location', __('Photo'))->required(),
+                                        ...TemplateSchema::fields([Field::text('caption', __('Caption'))]),
+                                    ])
+                                    ->grid(2)
+                                    ->defaultItems(0)
+                                    ->reorderable()
+                                    ->collapsible()
+                                    ->itemLabel(fn (array $state): ?string => Translate::resolve($state['caption'] ?? null) ?: null)
+                                    ->columnSpanFull(),
                             ]),
                         ]),
                         Tab::make('registration')->label(__('Registration'))->schema([

@@ -287,5 +287,12 @@
     "Remove from event": "Quitar del evento",
     "Speakers are added in the \"Speakers\" tab above, where you can also pick speakers from previous events.": "Los ponentes se añaden en la pestaña «Ponentes» de arriba, donde también puedes elegir ponentes de eventos anteriores.",
     "Time slots are created in the \"Time slots\" tab of this event.": "Las franjas se crean en la pestaña «Franjas horarias» de este evento.",
-    "Tracks are created in the \"Workshop tracks\" tab of this event.": "Las líneas se crean en la pestaña «Líneas de talleres» de este evento."
+    "Tracks are created in the \"Workshop tracks\" tab of this event.": "Las líneas se crean en la pestaña «Líneas de talleres» de este evento.",
+    "Photos": "Fotos",
+    "Caption": "Pie de foto",
+    "Rooms, maps, how to get there… Shown in a grid; a click opens the photo full size.": "Habitaciones, mapas, cómo llegar… Se muestran en cuadrícula; al pulsar una se abre en grande.",
+    "Shown in the Programme tab; a click opens it full size.": "Se muestra en la pestaña Programa; al pulsarla se abre en grande.",
+    "Shown in the Programme tab as a \"Download the programme\" button.": "Se muestra en la pestaña Programa como botón «Descargar el programa».",
+    "Main speaker": "Ponente principal",
+    "Main speakers are shown in the event intro, next to the dates.": "Los ponentes principales aparecen en la introducción del evento, junto a las fechas."
 }

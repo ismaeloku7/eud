@@ -12,7 +12,7 @@
                     <h2 class="text-8.5xl desktop_large:text-7xl text-white mb-0">
                         <strong class="counter" data-target="{{ (int) preg_replace('/\D+/', '', (string) $ministry->counter) }}"></strong>
                     </h2>
-                    <h5>{{ $site->menuName($ministry) }}</h5>
+                    <h5>{{ Str::upper($ministry->name) }}</h5>
                 </div>
             @endforeach
         </div>

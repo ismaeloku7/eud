@@ -12,45 +12,61 @@
         </div>
     </div>
 
-    <div class="flex flex-wrap">
-        <div class="w-1/2 mobile:w-full mobile:text-center mobile:pb-6">
-            <h3 class="theme-color-title fw-bold">{{ __('events.schedule') }}</h3>
-        </div>
-        <div class="w-1/2 mobile:w-full">
-            @include('site.events.tabs.partials.day-switcher', ['items' => $days, 'selected' => $programDay, 'select' => 'selectProgramDay', 'shift' => 'shiftProgramDay'])
-        </div>
-    </div>
-
-    <div class="flex flex-wrap mt-20 py-4">
-        <div class="w-full">
-            @foreach ($this->programsOfDay as $program)
-                <div class="py-8 flex" style="border-bottom: solid 1px whitesmoke;" wire:key="program-{{ $program->id }}">
-                    <div class="text-medium_blue block text-xl fw-bold mobile:fs-16 pr-4 tablet:pr-0" style="max-width: 240px; width: 100%; {{ $program->color ? 'border-left: 4px solid '.$program->color.'; padding-left: 1rem;' : '' }}">
-                        {{ $program->date_start->format('H:i') }} - {{ $program->date_end->format('H:i') }}
-                    </div>
-                    <div class="pl-4 tablet:pl-0 w-full">
-                        <span class="theme-color-title mobile:fs-14 flex items-center">
-                            {{ $program->title }}&ensp;
-                            @if ($program->main_session)
-                                <a wire:click="showMainSession({{ $program->id }})" style="cursor: pointer;" title="{{ __('events.tabs.main_session') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path fill="#45CDFC" d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" /></svg>
-                                </a>
-                            @endif
-                            @if ($program->sync_workshop && $this->workshopGroups->has((string) $program->id))
-                                <a wire:click="showWorkshops({{ $program->id }})" style="cursor: pointer;" title="{{ __('events.tabs.workshops') }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path fill="#45CDFC" d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" /></svg>
-                                </a>
-                            @endif
-                        </span>
-                        @if ($program->speakers->isNotEmpty())
-                            <span class="block theme-color-subtitle mobile:fs-14">{{ $program->speakers->map(fn ($speaker) => $speaker->name)->join(', ') }}</span>
-                        @endif
-                        @if ($program->description)
-                            <span class="block"><b class="theme-color-title mobile:fs-14">{!! $program->description !!}</b></span>
-                        @endif
-                    </div>
+    @if ($event->program_image || $event->program_download)
+        <div class="mb-20 text-center mobile:mb-12">
+            @if ($event->program_image)
+                <div id="programme-image-{{ $event->id }}" data-lightbox class="mb-8">
+                    <a href="{{ \App\Support\Media::url($event->program_image) }}" title="{{ $event->program_title ?: $event->title }}">
+                        <img src="{{ \App\Support\Media::url($event->program_image) }}" alt="{{ $event->program_title ?: $event->title }}" class="mx-auto w-full rounded-xl" style="max-width: 900px; height: auto;">
+                    </a>
                 </div>
-            @endforeach
+            @endif
+            @if ($event->program_download)
+                <a class="btn hover:bg-primary hover:text-white" href="{{ \App\Support\Media::url($event->program_download) }}" target="_blank" rel="noopener">{{ __('events.programme_pdf') }}</a>
+            @endif
         </div>
-    </div>
+    @endif
+
+    @if ($days->isNotEmpty())
+        <div class="mobile:text-center">
+            <h3 class="theme-color-title fw-bold mb-6">{{ __('events.schedule') }}</h3>
+            @include('site.events.tabs.partials.day-switcher', ['items' => $days, 'selected' => $programDay, 'select' => 'selectProgramDay', 'align' => 'start'])
+        </div>
+
+        <div class="flex flex-wrap mt-12 py-4">
+            <div class="w-full">
+                @if ($this->programDayTitle)
+                    <h4 class="theme-color-title fw-bold mb-2 mobile:text-center">{{ $this->programDayTitle }}</h4>
+                @endif
+                @foreach ($this->programsOfDay as $program)
+                    <div class="py-8 flex" style="border-bottom: solid 1px whitesmoke;" wire:key="program-{{ $program->id }}">
+                        <div class="text-medium_blue block text-xl fw-bold mobile:fs-16 pr-4 tablet:pr-0" style="max-width: 240px; width: 100%; {{ $program->color ? 'border-left: 4px solid '.$program->color.'; padding-left: 1rem;' : '' }}">
+                            {{ $program->date_start->format('H:i') }} - {{ $program->date_end->format('H:i') }}
+                        </div>
+                        <div class="pl-4 tablet:pl-0 w-full">
+                            <span class="theme-color-title mobile:fs-14 flex items-center">
+                                {{ $program->title }}&ensp;
+                                @if ($program->main_session)
+                                    <a wire:click="showMainSession({{ $program->id }})" style="cursor: pointer;" title="{{ __('events.tabs.main_session') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path fill="#45CDFC" d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" /></svg>
+                                    </a>
+                                @endif
+                                @if ($program->sync_workshop && $this->workshopGroups->has((string) $program->id))
+                                    <a wire:click="showWorkshops({{ $program->id }})" style="cursor: pointer;" title="{{ __('events.tabs.workshops') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><path fill="#45CDFC" d="M320 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h82.7L201.4 265.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L448 109.3V192c0 17.7 14.3 32 32 32s32-14.3 32-32V32c0-17.7-14.3-32-32-32H320zM80 32C35.8 32 0 67.8 0 112V432c0 44.2 35.8 80 80 80H400c44.2 0 80-35.8 80-80V320c0-17.7-14.3-32-32-32s-32 14.3-32 32V432c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V112c0-8.8 7.2-16 16-16H192c17.7 0 32-14.3 32-32s-14.3-32-32-32H80z" /></svg>
+                                    </a>
+                                @endif
+                            </span>
+                            @if ($program->speakers->isNotEmpty())
+                                <span class="block theme-color-subtitle mobile:fs-14">{{ $program->speakers->map(fn ($speaker) => $speaker->name)->join(', ') }}</span>
+                            @endif
+                            @if ($program->description)
+                                <span class="block"><b class="theme-color-title mobile:fs-14">{!! $program->description !!}</b></span>
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 </div>
