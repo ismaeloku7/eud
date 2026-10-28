@@ -5,8 +5,10 @@ namespace App\Filament\Resources\Events\Schemas;
 use App\Filament\Support\Forms\TemplateSchema;
 use App\Filament\Support\Forms\Uploads;
 use App\Pages\Field;
+use App\Pages\Translate;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -123,6 +125,19 @@ class EventForm
                                         Field::number('column', __('Column'), __('1 = full width, 2 = half width.')),
                                     ]),
                                 ]),
+                                Repeater::make('location_images')
+                                    ->label(__('Photos'))
+                                    ->helperText(__('Rooms, maps, how to get there… Shown in a grid; a click opens the photo full size.'))
+                                    ->schema([
+                                        Uploads::image('image', 'events/location', __('Photo'))->required(),
+                                        ...TemplateSchema::fields([Field::text('caption', __('Caption'))]),
+                                    ])
+                                    ->grid(2)
+                                    ->defaultItems(0)
+                                    ->reorderable()
+                                    ->collapsible()
+                                    ->itemLabel(fn (array $state): ?string => Translate::resolve($state['caption'] ?? null) ?: null)
+                                    ->columnSpanFull(),
                             ]),
                         ]),
                         Tab::make('registration')->label(__('Registration'))->schema([

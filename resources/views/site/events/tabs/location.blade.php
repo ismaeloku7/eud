@@ -18,5 +18,19 @@
             </div>
         @endif
     </div>
+    @php($photos = collect($event->location_images ?? [])->filter(fn ($photo) => filled($photo['image'] ?? null)))
+    @if ($photos->isNotEmpty())
+        <div id="location-photos-{{ $event->id }}" data-lightbox class="flex flex-wrap -mx-3 pt-16 mobile:pt-8">
+            @foreach ($photos as $photo)
+                @php($caption = \App\Pages\Translate::resolve($photo['caption'] ?? null))
+                <a class="w-1/3 px-3 mb-6 tablet:w-1/2 mobile:w-full" href="{{ \App\Support\Media::url($photo['image']) }}" title="{{ $caption }}" wire:key="location-photo-{{ $loop->index }}">
+                    <img src="{{ \App\Support\Media::url($photo['image']) }}" class="w-full rounded-xl" style="height: 240px; object-fit: cover;" alt="{{ $caption ?: $event->location }}" loading="lazy">
+                    @if ($caption !== '')
+                        <span class="block mt-2 text-center theme-text-black--important">{{ $caption }}</span>
+                    @endif
+                </a>
+            @endforeach
+        </div>
+    @endif
     @include('site.events.tabs.partials.blocks', ['blocks' => $event->location_recursive ?? []])
 </div>

@@ -89,6 +89,25 @@ class EventsTest extends TestCase
         Storage::disk('public')->assertExists($event->refresh()->image_about);
     }
 
+    public function test_location_photos_are_saved_with_their_captions(): void
+    {
+        Storage::fake('public');
+        $event = $this->makeEvent();
+
+        Livewire::test(EditEvent::class, ['record' => $event->getRouteKey()])
+            ->fillForm(['location_images' => [
+                ['image' => [UploadedFile::fake()->image('rooms.jpg')], 'caption' => ['en' => 'Double rooms', 'es' => 'Habitaciones dobles']],
+            ]])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $photos = $event->refresh()->location_images;
+
+        $this->assertCount(1, $photos);
+        $this->assertSame(['en' => 'Double rooms', 'es' => 'Habitaciones dobles'], $photos[0]['caption']);
+        Storage::disk('public')->assertExists($photos[0]['image']);
+    }
+
     public function test_spanish_translation_is_saved_without_touching_english(): void
     {
         $event = $this->makeEvent();
